@@ -13,12 +13,12 @@ import org.sat4j.tools.GateTranslator;
  */
 public class LogicStatement {
 
-    private AbstractLogicConstruct statement;
+    private Variable statement;
 
     /**
      * 
      */
-    public LogicStatement(AbstractLogicConstruct statement) {
+    public LogicStatement(Variable statement) {
         this.statement = statement;
     }
     

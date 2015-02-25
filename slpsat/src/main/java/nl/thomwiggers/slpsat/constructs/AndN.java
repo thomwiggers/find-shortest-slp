@@ -12,7 +12,7 @@ import org.sat4j.tools.GateTranslator;
  * @author Thom Wiggers
  *
  */
-public class AndN extends AbstractLogicConstruct {
+public class AndN extends Variable {
 
     protected final Variable[] variables;
     
@@ -20,7 +20,7 @@ public class AndN extends AbstractLogicConstruct {
      * @param y
      */
     public AndN(int y, Variable[] vars) {
-        super(y);
+        super(y, "andN");
         this.variables = vars;
     }
 
@@ -28,7 +28,7 @@ public class AndN extends AbstractLogicConstruct {
      * 
      */
     public AndN(Variable[] vars) {
-        super();
+        super("andN");
         this.variables = vars;
     }
 

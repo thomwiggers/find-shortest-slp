@@ -8,33 +8,39 @@ import org.sat4j.specs.ContradictionException;
 import org.sat4j.tools.GateTranslator;
 
 /**
- * True constant
+ * False constant
  * 
  * @author Thom Wiggers
  *
  */
-public class True extends Variable {
+public class False extends Variable {
 
     /**
-     * Empty true constant
+     * Empty true variable
      */
-    public True() {
-        super("truth");
+    public False() {
+        super("falsehood");
     }
     
     /**
-     * @param name The name of this constant
+     * Named false constant
+     * 
+     * @param name the name of this constant
      */
-    public True(String name) {
+    public False(String name) {
         super(name);
     }
-
-    /* (non-Javadoc)
-     * @see nl.thomwiggers.slpsat.constructs.Variable#addToGateTranslator(org.sat4j.tools.GateTranslator)
+    
+    /*
+     * (non-Javadoc)
+     * @see
+     * nl.thomwiggers.slpsat.constructs.True#addToGateTranslator(org
+     * .sat4j.tools.GateTranslator)
      */
     @Override
     protected void addToGateTranslator(GateTranslator translator)
             throws ContradictionException {
-        translator.gateTrue(getIndex());
+        translator.gateFalse(getIndex());
     }
+
 }

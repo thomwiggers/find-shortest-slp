@@ -11,7 +11,7 @@ import org.sat4j.tools.GateTranslator;
  * @author Thom Wiggers
  *
  */
-public class Not extends AbstractLogicConstruct {
+public class Not extends Variable {
 
     private final Variable p;
 
@@ -19,7 +19,7 @@ public class Not extends AbstractLogicConstruct {
      * @param y
      */
     public Not(int y, Variable p) {
-        super(y);
+        super(y, "not");
         this.p = p;
         // TODO Auto-generated constructor stub
     }
@@ -28,7 +28,7 @@ public class Not extends AbstractLogicConstruct {
      * 
      */
     public Not(Variable p) {
-        super();
+        super("not");
         this.p = p;
     }
 

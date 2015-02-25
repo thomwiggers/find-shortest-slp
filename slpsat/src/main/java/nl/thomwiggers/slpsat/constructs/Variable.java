@@ -41,6 +41,11 @@ public class Variable {
         this.name = name;
         this.index = Variable.getNextFreeIndex();
     }
+    
+    public Variable(int y, String name) {
+        this.name = name;
+        this.index = y;
+    }
 
     /**
      * @return the index
