@@ -10,14 +10,11 @@ package nl.thomwiggers.slpsat;
 
 import java.util.Arrays;
 
-import nl.thomwiggers.slpsat.constructs.AbstractLogicConstruct;
-import nl.thomwiggers.slpsat.constructs.And;
 import nl.thomwiggers.slpsat.constructs.LogicStatement;
 import nl.thomwiggers.slpsat.constructs.Not;
 import nl.thomwiggers.slpsat.constructs.Or;
 import nl.thomwiggers.slpsat.constructs.Variable;
 
-import org.sat4j.core.VecInt;
 import org.sat4j.minisat.SolverFactory;
 import org.sat4j.specs.ContradictionException;
 import org.sat4j.specs.ISolver;

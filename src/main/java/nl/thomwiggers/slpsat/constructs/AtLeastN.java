@@ -12,41 +12,43 @@ import org.sat4j.tools.GateTranslator;
  * @author Thom Wiggers
  *
  */
-public class XorN extends Variable {
+public class AtLeastN extends Variable {
 
     private Variable[] vars;
+    private int n;
 
     /**
      * @param y
      */
-    public XorN(int y, Variable[] vars) {
-        super(y, "XorN");
+    public AtLeastN(int y, int n, Variable[] vars) {
+        super(y, "AtLeast" + n);
+        this.n = n;
         this.vars = vars;
     }
 
     /**
      * 
      */
-    public XorN(Variable[] vars) {
-        super("XorN");
+    public AtLeastN(int n, Variable[] vars) {
+        super("AtLeast" + n);
+        this.n = n;
         this.vars = vars;
     }
-    
-    /*
-     * (non-Javadoc)
-     * @see nl.thomwiggers.slpsat.constructs.AbstractLogicConstruct#
-     * addToGateTranslator(org.sat4j.tools.GateTranslator)
+
+    /* (non-Javadoc)
+     * @see nl.thomwiggers.slpsat.constructs.Variable#addToGateTranslator(org.sat4j.tools.GateTranslator)
      */
     @Override
     protected void addToGateTranslator(GateTranslator translator)
             throws ContradictionException {
-        VecInt literals = new VecInt();
-        for (Variable var : this.vars) {
+        VecInt lits = new VecInt();        
+        for (Variable var : vars) {
             var.addToGateTranslator(translator);
-            literals.push(var.getIndex());
+            lits.push(var.getIndex());
         }
-        translator.xor(this.getIndex(), literals);
-
+        translator.addAtLeast(lits, this.n);
     }
 
+    
+    
 }

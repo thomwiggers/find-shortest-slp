@@ -11,7 +11,7 @@ import org.sat4j.tools.GateTranslator;
  * @author Thom Wiggers
  *
  */
-public class Implies extends AbstractLogicConstruct {
+public class Implies extends Variable {
 
     private Variable p;
     private Variable q;
@@ -20,7 +20,7 @@ public class Implies extends AbstractLogicConstruct {
      * @param y
      */
     public Implies(int y, Variable p, Variable q) {
-        super(y);
+        super(y, "Implies");
         this.p = p;
         this.q = q;
     }
@@ -29,7 +29,7 @@ public class Implies extends AbstractLogicConstruct {
      * 
      */
     public Implies(Variable p, Variable q) {
-        super();
+        super("Implies");
         this.p = p;
         this.q = q;
     }
