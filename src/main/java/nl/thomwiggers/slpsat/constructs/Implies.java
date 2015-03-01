@@ -40,8 +40,13 @@ public class Implies extends Variable {
     @Override
     protected void addToGateTranslator(GateTranslator translator)
             throws ContradictionException {
-        Not operation = new Not(new And(this.p, new Not(this.q)));
-        operation.addToGateTranslator(translator);
+        p.addToGateTranslator(translator);
+        q.addToGateTranslator(translator);
+        True z = new True();
+        z.addToGateTranslator(translator);
+        translator.ite(getIndex(), p.getIndex(), q.getIndex(), z.getIndex());
+        //Not operation = new Not(new And(this.p, new Not(this.q)));
+        //operation.addToGateTranslator(translator);
 
     }
 

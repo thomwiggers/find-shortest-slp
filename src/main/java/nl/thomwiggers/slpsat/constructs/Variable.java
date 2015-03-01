@@ -64,4 +64,14 @@ public class Variable {
     protected void addToGateTranslator(GateTranslator translator) throws ContradictionException {
     }
     
+    public boolean findValuation(int[] model) {
+        for (int val : model) {
+            if (val == this.index) {
+                return true;
+            } else if (val == -this.index) {
+                return false;
+            }
+        }
+        throw new RuntimeException("No value for this object!");
+    }
 }

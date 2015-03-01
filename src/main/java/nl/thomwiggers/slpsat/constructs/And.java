@@ -18,4 +18,12 @@ public class And extends AndN {
         super(new Variable[] {p, q});
     }
 
+    /**
+     * @param p
+     * @param q
+     */
+    public And(int y, Variable p, Variable q) {
+        super(y, new Variable[] {p, q});
+    }
+
 }

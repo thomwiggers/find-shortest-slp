@@ -41,7 +41,7 @@ public class Not extends Variable {
     protected void addToGateTranslator(GateTranslator translator)
             throws ContradictionException {
         p.addToGateTranslator(translator);
-        translator.not(getIndex(), this.p.getIndex());
+        translator.not(getIndex(), p.getIndex());
     }
 
 }
