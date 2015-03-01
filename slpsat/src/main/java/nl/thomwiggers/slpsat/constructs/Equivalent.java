@@ -21,7 +21,7 @@ public class Equivalent extends Variable {
      * 
      */
     public Equivalent(Variable p, Variable q) {
-        super(p.getIndex(), "equiv");
+        super("equiv");
         this.p = p;
         this.q = q;
     }
@@ -34,7 +34,7 @@ public class Equivalent extends Variable {
             throws ContradictionException {
         p.addToGateTranslator(translator);
         q.addToGateTranslator(translator);
-        translator.iff(p.getIndex(), new VecInt(new int[] {q.getIndex()}));
+        translator.iff(getIndex(), new VecInt(new int[] {p.getIndex(), q.getIndex()}));
     }
 
 }
