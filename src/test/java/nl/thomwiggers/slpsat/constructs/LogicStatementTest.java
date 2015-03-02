@@ -19,6 +19,7 @@ public class LogicStatementTest extends TestCase {
 
     private GateTranslator translator;
 
+    @Override
     public void setUp() {
         this.translator = new GateTranslator(SolverFactory.newLight());
     }

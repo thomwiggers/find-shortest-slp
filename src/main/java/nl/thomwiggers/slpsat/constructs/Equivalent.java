@@ -14,8 +14,8 @@ import org.sat4j.tools.GateTranslator;
  */
 public class Equivalent extends Variable {
 
-    private Variable q;
     private Variable p;
+    private Variable q;
 
     /**
      * 

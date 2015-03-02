@@ -32,6 +32,11 @@ public class Variable {
      */
     private final String name;
 
+    public Variable(int y, String name) {
+        this.name = name;
+        this.index = y;
+    }
+    
     /**
      * Get a new variable
      * 
@@ -41,29 +46,10 @@ public class Variable {
         this.name = name;
         this.index = Variable.getNextFreeIndex();
     }
-    
-    public Variable(int y, String name) {
-        this.name = name;
-        this.index = y;
-    }
-
-    /**
-     * @return the index
-     */
-    public int getIndex() {
-        return this.index;
-    }
-
-    /**
-     * @return the name
-     */
-    public String getName() {
-        return this.name;
-    }
 
     protected void addToGateTranslator(GateTranslator translator) throws ContradictionException {
     }
-    
+
     public boolean findValuation(int[] model) {
         for (int val : model) {
             if (val == this.index) {
@@ -73,5 +59,19 @@ public class Variable {
             }
         }
         throw new RuntimeException("No value for this object!");
+    }
+
+    /**
+     * @return the index
+     */
+    public int getIndex() {
+        return this.index;
+    }
+    
+    /**
+     * @return the name
+     */
+    public String getName() {
+        return this.name;
     }
 }
