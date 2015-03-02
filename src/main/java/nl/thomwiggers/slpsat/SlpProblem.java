@@ -11,6 +11,7 @@ import java.util.List;
 import nl.thomwiggers.slpsat.constructs.And;
 import nl.thomwiggers.slpsat.constructs.AndN;
 import nl.thomwiggers.slpsat.constructs.AtLeastN;
+import nl.thomwiggers.slpsat.constructs.AtMostN;
 import nl.thomwiggers.slpsat.constructs.Equivalent;
 import nl.thomwiggers.slpsat.constructs.ExactlyN;
 import nl.thomwiggers.slpsat.constructs.False;
@@ -179,7 +180,7 @@ public class SlpProblem {
     public Solution getSolution(boolean tunings) throws Exception {
         IProblem problem = this.getSolvableProblem(tunings);
         if (!problem.isSatisfiable())
-            throw new Exception("Not Satisfiable");
+            return null;
 
         int[] model = problem.findModel();
 
@@ -272,9 +273,42 @@ public class SlpProblem {
         return new AndN(ands);
     }
 
+    /* Need to figure out what i, j are
+    private Variable getTuning3() {
+
+    }*/
+
+    private Variable getTuning4() {
+        Variable[] andn = new Variable[k];
+        for (int i = 0; i < k; i++) {
+            Variable[] fs = new Variable[m];
+            for (int j = 0; j < m; j++) {
+                fs[j] = this.f[j][i];
+            }
+            andn[i] = new AtMostN(k, fs);
+        }
+        return new AndN(andn);
+    }
+
+    private Variable getTuning5() {
+        List<Variable> vars = new LinkedList<Variable>();
+        for (int i = 0; i < m; i++) {
+            vars.addAll(Arrays.asList(f[i]));
+        }
+        return new AtMostN(k, vars.toArray(new Variable[]{}));
+    }
+
+    private Variable getTuning6() {
+        List<Variable> vars = new LinkedList<Variable>();
+        for (int i = 0; i < m; i++) {
+            vars.addAll(Arrays.asList(f[i]));
+        }
+        return new AtLeastN(m, vars.toArray(new Variable[]{}));
+    }
+
     public LogicStatement getTunings() {
         return new LogicStatement(new AndN(new Variable[] { this.getTuning1(),
-                this.getTuning2() }));
+                this.getTuning2(), getTuning4(), getTuning5(), getTuning6() }));
     }
 
     private Variable psi(int j, int i) {
