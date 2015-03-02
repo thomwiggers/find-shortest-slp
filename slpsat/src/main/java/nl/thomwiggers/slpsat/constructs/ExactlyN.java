@@ -14,8 +14,8 @@ import org.sat4j.tools.GateTranslator;
  */
 public class ExactlyN extends Variable {
 
-    private Variable[] vars;
     private int n;
+    private Variable[] vars;
 
     /**
      * @param y

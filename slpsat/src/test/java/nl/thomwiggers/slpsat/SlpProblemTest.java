@@ -21,6 +21,7 @@ public class SlpProblemTest extends TestCase {
      * (non-Javadoc)
      * @see junit.framework.TestCase#setUp()
      */
+    @Override
     protected void setUp() throws Exception {
         super.setUp();
         boolean[][] A = new boolean[][] { { true, true, true, true, true },
@@ -39,12 +40,9 @@ public class SlpProblemTest extends TestCase {
         assertNotNull(this.problem.getProblem());
     }
 
-    /**
-     * Test method for
-     * {@link nl.thomwiggers.slpsat.SlpProblem#getTunings()}.
-     */
-    public void testGetTunings() {
-        assertNotNull(this.problem.getTunings());
+    public void testGetSolution() throws Exception {
+        SlpProblem.Solution solution = this.problem.getSolution();
+        assertNotNull(solution);
     }
 
     public void testGetSolvableProblem() throws ContradictionException {
@@ -55,9 +53,12 @@ public class SlpProblemTest extends TestCase {
         assertNotNull(this.problem.getSolvableProblem(false));
     }
 
-    public void testIsSolvableUntuned() throws ContradictionException,
-            TimeoutException {
-        assertTrue(this.problem.getSolvableProblem(false).isSatisfiable());
+    /**
+     * Test method for
+     * {@link nl.thomwiggers.slpsat.SlpProblem#getTunings()}.
+     */
+    public void testGetTunings() {
+        assertNotNull(this.problem.getTunings());
     }
 
     public void testIsSolvableTuned() throws ContradictionException,
@@ -65,9 +66,9 @@ public class SlpProblemTest extends TestCase {
         assertTrue(this.problem.getSolvableProblem(true).isSatisfiable());
     }
     
-    public void testGetSolution() throws Exception {
-        SlpProblem.Solution solution = this.problem.getSolution();
-        assertNotNull(solution);
+    public void testIsSolvableUntuned() throws ContradictionException,
+            TimeoutException {
+        assertTrue(this.problem.getSolvableProblem(false).isSatisfiable());
     }
 
 }

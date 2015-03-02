@@ -57,17 +57,6 @@ public class SlpProblem {
             this.m = SlpProblem.this.m;
         }
 
-        @Override
-        public String toString() {
-            StringBuilder sb = new StringBuilder("B");
-            appendArrayToStringBuilder(B, sb);
-            sb.append("C");
-            appendArrayToStringBuilder(C, sb);
-            sb.append("f");
-            appendArrayToStringBuilder(f, sb);
-            return sb.toString();
-        }
-
         private void appendArrayToStringBuilder(boolean[][] a, StringBuilder sb) {
             sb.append(" = [\n");
             for (boolean[] row : a) {
@@ -78,6 +67,17 @@ public class SlpProblem {
                 sb.delete(sb.lastIndexOf(","), sb.length()).append("],\n");
             }
             sb.append("]\n");
+        }
+
+        @Override
+        public String toString() {
+            StringBuilder sb = new StringBuilder("B");
+            appendArrayToStringBuilder(B, sb);
+            sb.append("C");
+            appendArrayToStringBuilder(C, sb);
+            sb.append("f");
+            appendArrayToStringBuilder(f, sb);
+            return sb.toString();
         }
     }
 
