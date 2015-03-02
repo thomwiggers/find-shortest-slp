@@ -22,47 +22,62 @@ public class LogicStatementTest extends TestCase {
     public void setUp() {
         this.translator = new GateTranslator(SolverFactory.newLight());
     }
-    
+
     /**
      * Test A & B
      * 
-     * Test method for {@link nl.thomwiggers.slpsat.constructs.LogicStatement#addToGateTranslator(org.sat4j.tools.GateTranslator)}.
+     * Test method for
+     * {@link nl.thomwiggers.slpsat.constructs.LogicStatement#addToGateTranslator(org.sat4j.tools.GateTranslator)}
+     * .
      */
-    public void testAddToGateTranslator1() throws ContradictionException, TimeoutException {
+    public void testAddToGateTranslator1() throws ContradictionException,
+            TimeoutException {
         LogicStatement statement;
-        statement = new LogicStatement(new And(new Variable("a"), new Variable("b")));
+        statement = new LogicStatement(new And(new Variable("a"), new Variable(
+                "b")));
         statement.addToGateTranslator(this.translator);
         assertTrue(translator.getSolvingEngine().isSatisfiable());
     }
-    
+
     /**
-     * Test method for {@link nl.thomwiggers.slpsat.constructs.LogicStatement#addToGateTranslator(org.sat4j.tools.GateTranslator)}.
+     * Test method for
+     * {@link nl.thomwiggers.slpsat.constructs.LogicStatement#addToGateTranslator(org.sat4j.tools.GateTranslator)}
+     * .
      */
-    public void testAddToGateTranslator2() throws ContradictionException, TimeoutException {
+    public void testAddToGateTranslator2() throws ContradictionException,
+            TimeoutException {
         LogicStatement statement;
-        statement = new LogicStatement(new Or(new Variable("a"), new Variable("b")));
+        statement = new LogicStatement(new Or(new Variable("a"), new Variable(
+                "b")));
         statement.addToGateTranslator(translator);
         assertTrue(translator.getSolvingEngine().isSatisfiable());
     }
-    
+
     /**
-     * Test method for {@link nl.thomwiggers.slpsat.constructs.LogicStatement#addToGateTranslator(org.sat4j.tools.GateTranslator)}.
+     * Test method for
+     * {@link nl.thomwiggers.slpsat.constructs.LogicStatement#addToGateTranslator(org.sat4j.tools.GateTranslator)}
+     * .
      */
-    public void testAddToGateTranslator3() throws ContradictionException, TimeoutException {
+    public void testAddToGateTranslator3() throws ContradictionException,
+            TimeoutException {
         LogicStatement statement;
         statement = new LogicStatement(new Not(new Variable("b")));
         statement.addToGateTranslator(translator);
         assertTrue(translator.getSolvingEngine().isSatisfiable());
     }
-    
+
     /**
      * Test a <=> b solvable
      * 
-     * Test method for {@link nl.thomwiggers.slpsat.constructs.LogicStatement#addToGateTranslator(org.sat4j.tools.GateTranslator)}.
+     * Test method for
+     * {@link nl.thomwiggers.slpsat.constructs.LogicStatement#addToGateTranslator(org.sat4j.tools.GateTranslator)}
+     * .
      */
-    public void testAddToGateTranslator4() throws ContradictionException, TimeoutException {
+    public void testAddToGateTranslator4() throws ContradictionException,
+            TimeoutException {
         LogicStatement statement;
-        statement = new LogicStatement(new Equivalent(new Variable("a"), new Variable("b")));
+        statement = new LogicStatement(new Equivalent(new Variable("a"),
+                new Variable("b")));
         statement.addToGateTranslator(translator);
         assertTrue(translator.getSolvingEngine().isSatisfiable());
     }
@@ -70,21 +85,27 @@ public class LogicStatementTest extends TestCase {
     /**
      * Test False <=> False
      * 
-     * Test method for {@link nl.thomwiggers.slpsat.constructs.LogicStatement#addToGateTranslator(org.sat4j.tools.GateTranslator)}.
+     * Test method for
+     * {@link nl.thomwiggers.slpsat.constructs.LogicStatement#addToGateTranslator(org.sat4j.tools.GateTranslator)}
+     * .
      */
-    public void testAddToGateTranslator5() throws ContradictionException, TimeoutException {
+    public void testAddToGateTranslator5() throws ContradictionException,
+            TimeoutException {
         LogicStatement statement;
         statement = new LogicStatement(new Equivalent(new False(), new False()));
         statement.addToGateTranslator(translator);
         assertTrue(translator.getSolvingEngine().isSatisfiable());
     }
-    
+
     /**
      * Test implies
      * 
-     * Test method for {@link nl.thomwiggers.slpsat.constructs.LogicStatement#addToGateTranslator(org.sat4j.tools.GateTranslator)}.
+     * Test method for
+     * {@link nl.thomwiggers.slpsat.constructs.LogicStatement#addToGateTranslator(org.sat4j.tools.GateTranslator)}
+     * .
      */
-    public void testAddToGateTranslator6() throws ContradictionException, TimeoutException {
+    public void testAddToGateTranslator6() throws ContradictionException,
+            TimeoutException {
         LogicStatement statement;
         statement = new LogicStatement(new Implies(new False(), new False()));
         statement.addToGateTranslator(translator);
@@ -93,25 +114,32 @@ public class LogicStatementTest extends TestCase {
         statement.addToGateTranslator(translator);
         assertTrue(translator.getSolvingEngine().isSatisfiable());
     }
-    
+
     /**
      * Test implies
      * 
-     * Test method for {@link nl.thomwiggers.slpsat.constructs.LogicStatement#addToGateTranslator(org.sat4j.tools.GateTranslator)}.
+     * Test method for
+     * {@link nl.thomwiggers.slpsat.constructs.LogicStatement#addToGateTranslator(org.sat4j.tools.GateTranslator)}
+     * .
      */
-    public void testAddToGateTranslatorImpliesFalse() throws ContradictionException, TimeoutException {
+    public void testAddToGateTranslatorImpliesFalse()
+            throws ContradictionException, TimeoutException {
         LogicStatement statement;
-        statement = new LogicStatement(new Not(new Implies(new True(), new False())));
+        statement = new LogicStatement(new Not(new Implies(new True(),
+                new False())));
         statement.addToGateTranslator(translator);
         assertTrue(translator.getSolvingEngine().isSatisfiable());
     }
-    
+
     /**
      * Test implies
      * 
-     * Test method for {@link nl.thomwiggers.slpsat.constructs.LogicStatement#addToGateTranslator(org.sat4j.tools.GateTranslator)}.
+     * Test method for
+     * {@link nl.thomwiggers.slpsat.constructs.LogicStatement#addToGateTranslator(org.sat4j.tools.GateTranslator)}
+     * .
      */
-    public void testAddToGateTranslatorImpliesFalseRaises() throws TimeoutException {
+    public void testAddToGateTranslatorImpliesFalseRaises()
+            throws TimeoutException {
         LogicStatement statement;
         statement = new LogicStatement(new Implies(new True(), new False()));
         boolean raised = false;
@@ -121,16 +149,19 @@ public class LogicStatementTest extends TestCase {
         } catch (ContradictionException e) {
             raised = true;
         }
-        assertTrue(raised);
+        if (!raised)
+            fail("No exception thrown!");
     }
-    
-    
+
     /**
      * Test Not True
      * 
-     * Test method for {@link nl.thomwiggers.slpsat.constructs.LogicStatement#addToGateTranslator(org.sat4j.tools.GateTranslator)}.
+     * Test method for
+     * {@link nl.thomwiggers.slpsat.constructs.LogicStatement#addToGateTranslator(org.sat4j.tools.GateTranslator)}
+     * .
      */
-    public void testAddToGateTranslatorNotTrue() throws ContradictionException, TimeoutException {
+    public void testAddToGateTranslatorNotTrue() throws ContradictionException,
+            TimeoutException {
         LogicStatement statement;
         statement = new LogicStatement(new Not(new Not(new True())));
         statement.addToGateTranslator(translator);
