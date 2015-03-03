@@ -2,26 +2,26 @@
  * @copyright 2015 Thom Wiggers
  * @license GPLv3
  */
-package nl.thomwiggers.slpsat.constructs;
+package nl.thomwiggers.slpsat;
 
-import nl.thomwiggers.slpsat.SlpProblem;
-import junit.framework.TestCase;
+import org.junit.Before;
+import org.junit.Ignore;
+import org.junit.Test;
 
 /**
  * @author Thom Wiggers
  *
  */
-public class AESSubBytesTest extends TestCase {
+@Ignore("Usually too little RAM")
+public class AESSolverTestCase {
 
     private SlpProblem problem;
 
-    /*
-     * (non-Javadoc)
-     * @see junit.framework.TestCase#setUp()
+    /**
+     * @throws java.lang.Exception
      */
-    protected void setUp() throws Exception {
-        super.setUp();
-
+    @Before
+    public void setUp() throws Exception {
         boolean[][] a = new boolean[][] {
                 { false, true, true, false, false, false, false, true },
                 { true, true, true, false, false, false, false, true },
@@ -46,17 +46,19 @@ public class AESSubBytesTest extends TestCase {
                 { true, false, true, false, true, true, false, false } };
         this.problem = new SlpProblem(23, a);
     }
-
+    
     /**
      * Test if we can solve this for the AES problem in the paper
      * 
      * Test method for
      * {@link nl.thomwiggers.slpsat.SlpProblem#getSolution()}.
      */
+    @Test
     public void testGetSolution() throws Exception {
         problem.getSolution();
     }
     
+    @Test
     public void testGetSolutionUntuned() throws Exception {
         problem.getSolution(false);
     }
