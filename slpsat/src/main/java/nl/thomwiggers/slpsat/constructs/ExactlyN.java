@@ -27,28 +27,35 @@ public class ExactlyN extends Variable {
     }
 
     /**
-     * 
+     *
      */
     public ExactlyN(int n, Variable[] vars) {
         super("exactly" + n);
+        assert n == 1;
         this.n = n;
         this.vars = vars;
     }
 
-    /* (non-Javadoc)
-     * @see nl.thomwiggers.slpsat.constructs.Variable#addToGateTranslator(org.sat4j.tools.GateTranslator)
+    /*
+     * (non-Javadoc)
+     * @see
+     * nl.thomwiggers.slpsat.constructs.Variable#addToGateTranslator
+     * (org.sat4j.tools.GateTranslator)
      */
     @Override
     protected void addToGateTranslator(GateTranslator translator)
             throws ContradictionException {
-        VecInt lits = new VecInt();        
-        for (Variable var : vars) {
+        if (this.added)
+            return;
+        this.added = true;
+
+        VecInt lits = new VecInt();
+        for (Variable var : this.vars) {
             var.addToGateTranslator(translator);
             lits.push(var.getIndex());
         }
+        vars = null;
         translator.addExactly(lits, this.n);
     }
 
-    
-    
 }

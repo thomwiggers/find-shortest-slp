@@ -72,11 +72,11 @@ public class SlpProblem {
         @Override
         public String toString() {
             StringBuilder sb = new StringBuilder("B");
-            appendArrayToStringBuilder(B, sb);
+            this.appendArrayToStringBuilder(this.B, sb);
             sb.append("C");
-            appendArrayToStringBuilder(C, sb);
+            this.appendArrayToStringBuilder(this.C, sb);
             sb.append("f");
-            appendArrayToStringBuilder(f, sb);
+            this.appendArrayToStringBuilder(this.f, sb);
             return sb.toString();
         }
     }
@@ -85,10 +85,10 @@ public class SlpProblem {
     private Variable[][] B;
     private Variable[][] C;
     private Variable[][] f;
-    private Variable[][] psiResults;
     private int k;
     private int m;
     private int n;
+    private Variable[][] psiResults;
     private ISolver solver;
 
     /**
@@ -99,17 +99,19 @@ public class SlpProblem {
      * @param m the number of output variables
      * @param A the m×n matrix that represents the program
      */
-    public SlpProblem(int k, boolean[][] A) {        
+    public SlpProblem(int k, boolean[][] A) {
         int m = A.length;
         int n = A[0].length;
         this.A = new Variable[m][n];
+        True truth = new True("a");
+        False falsehood = new False("a");
         for (int i = 0; i < m; i++) {
             for (int j = 0; j < n; j++) {
-                String name = "a_{" + i + ", " + j + "}";
+                //String name = "a_{" + i + ", " + j + "}";
                 if (A[i][j]) {
-                    this.A[i][j] = new True(name);
+                    this.A[i][j] = truth;
                 } else {
-                    this.A[i][j] = new False(name);
+                    this.A[i][j] = falsehood;
                 }
 
             }
@@ -135,9 +137,9 @@ public class SlpProblem {
                 this.f[i][j] = new Variable("f_{" + i + ", " + j + "}");
             }
         }
-        
-        psiResults = new Variable[k][k];
-        
+
+        this.psiResults = new Variable[k][k];
+
     }
 
     private Variable beta1() {
@@ -171,6 +173,24 @@ public class SlpProblem {
             andimps[i] = new Implies(this.f[l][i], new AndN(andequivs));
         }
         return new And(new AndN(andimps), new ExactlyN(1, this.f[l]));
+    }
+
+    /**
+     * Doesn't work because of exactly_2
+     *
+     * @param tunings
+     * @return
+     * @throws ContradictionException
+     */
+    public ISolver getDimacsSolver(boolean tunings)
+            throws ContradictionException {
+        ISolver solver = SolverFactory.newDimacsOutput();
+        GateTranslator translator = new GateTranslator(solver);
+        this.getProblem().addToGateTranslator(translator);
+        if (tunings) {
+            this.getTunings().addToGateTranslator(translator);
+        }
+        return solver;
     }
 
     public LogicStatement getProblem() {
@@ -223,26 +243,20 @@ public class SlpProblem {
             throws ContradictionException {
         if (this.solver != null)
             return this.solver;
-        this.solver = SolverFactory.newDefault();
-        GateTranslator translator = new GateTranslator(this.solver);
 
-        this.getProblem().addToGateTranslator(translator);
+        this.solver = SolverFactory.newMiniSATHeap();
+        GateTranslator translator = new GateTranslator(this.solver);
+        System.out.println("Representing problem in Java");
+        LogicStatement problem = this.getProblem();
+        System.out.println("Adding to GateTranslator");
+        problem.addToGateTranslator(translator);
 
         if (tunings) {
+            System.out.println("Adding tunings to GateTranslator");
             this.getTunings().addToGateTranslator(translator);
         }
 
         return this.solver;
-    }
-    
-    public ISolver getDimacsSolver(boolean tunings) throws ContradictionException{
-        ISolver solver = SolverFactory.newDimacsOutput();
-        GateTranslator translator = new GateTranslator(solver);
-        this.getProblem().addToGateTranslator(translator);
-        if (tunings) {
-            this.getTunings().addToGateTranslator(translator);
-        }
-        return solver;
     }
 
     /**
@@ -288,61 +302,59 @@ public class SlpProblem {
         return new AndN(ands);
     }
 
-    /* Need to figure out what i, j are
-    private Variable getTuning3() {
-
-    }*/
+    // // Need to figure out what i, j are
+    // private Variable getTuning3() {
+    // return null;
+    // }
 
     private Variable getTuning4() {
-        Variable[] andn = new Variable[k];
-        for (int i = 0; i < k; i++) {
-            Variable[] fs = new Variable[m];
-            for (int j = 0; j < m; j++) {
+        Variable[] andn = new Variable[this.k];
+        for (int i = 0; i < this.k; i++) {
+            Variable[] fs = new Variable[this.m];
+            for (int j = 0; j < this.m; j++) {
                 fs[j] = this.f[j][i];
             }
-            andn[i] = new AtMostN(k, fs);
+            andn[i] = new AtMostN(this.k, fs);
         }
         return new AndN(andn);
     }
 
     private Variable getTuning5() {
         List<Variable> vars = new LinkedList<Variable>();
-        for (int i = 0; i < m; i++) {
-            vars.addAll(Arrays.asList(f[i]));
+        for (int i = 0; i < this.m; i++) {
+            vars.addAll(Arrays.asList(this.f[i]));
         }
-        return new AtMostN(k, vars.toArray(new Variable[]{}));
+        return new AtMostN(this.k, vars.toArray(new Variable[] {}));
     }
 
     private Variable getTuning6() {
         List<Variable> vars = new LinkedList<Variable>();
-        for (int i = 0; i < m; i++) {
-            vars.addAll(Arrays.asList(f[i]));
+        for (int i = 0; i < this.m; i++) {
+            vars.addAll(Arrays.asList(this.f[i]));
         }
-        return new AtLeastN(m, vars.toArray(new Variable[]{}));
+        return new AtLeastN(this.m, vars.toArray(new Variable[] {}));
     }
 
     public LogicStatement getTunings() {
         return new LogicStatement(new AndN(new Variable[] { this.getTuning1(),
-                this.getTuning2(), getTuning4(), getTuning5(), getTuning6() }));
+                this.getTuning2(), this.getTuning4(), this.getTuning5(),
+                this.getTuning6() }));
     }
 
-    
-    
     private Variable psi(int j, int i) {
-        if (psiResults[j][i] != null) {
-            return psiResults[j][i];
-        }
-        
+        if (this.psiResults[j][i] != null)
+            return this.psiResults[j][i];
+
         Variable[] xorn = new Variable[i];
         for (int p = 0; p < i; p++) {
-            Variable psi = psiResults[j][p];
+            Variable psi = this.psiResults[j][p];
             if (psi == null) {
                 psi = this.psi(j, p);
             }
             xorn[p] = new And(this.C[i][p], psi);
         }
-        psiResults[j][i] = new Xor(this.B[i][j], new XorN(xorn));
-        return psiResults[j][i];
+        this.psiResults[j][i] = new Xor(this.B[i][j], new XorN(xorn));
+        return this.psiResults[j][i];
 
     }
 }

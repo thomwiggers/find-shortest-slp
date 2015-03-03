@@ -25,13 +25,13 @@ public class XorN extends Variable {
     }
 
     /**
-     * 
+     *
      */
     public XorN(Variable[] vars) {
         super("XorN");
         this.vars = vars;
     }
-    
+
     /*
      * (non-Javadoc)
      * @see nl.thomwiggers.slpsat.constructs.AbstractLogicConstruct#
@@ -40,13 +40,16 @@ public class XorN extends Variable {
     @Override
     protected void addToGateTranslator(GateTranslator translator)
             throws ContradictionException {
+        if (this.added)
+            return;
+        this.added = true;
         VecInt literals = new VecInt();
         for (Variable var : this.vars) {
             var.addToGateTranslator(translator);
             literals.push(var.getIndex());
         }
         translator.xor(this.getIndex(), literals);
-
+        this.vars = null;
     }
 
 }

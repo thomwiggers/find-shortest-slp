@@ -27,7 +27,7 @@ public class AtLeastN extends Variable {
     }
 
     /**
-     * 
+     *
      */
     public AtLeastN(int n, Variable[] vars) {
         super("AtLeast" + n);
@@ -35,20 +35,25 @@ public class AtLeastN extends Variable {
         this.vars = vars;
     }
 
-    /* (non-Javadoc)
-     * @see nl.thomwiggers.slpsat.constructs.Variable#addToGateTranslator(org.sat4j.tools.GateTranslator)
+    /*
+     * (non-Javadoc)
+     * @see
+     * nl.thomwiggers.slpsat.constructs.Variable#addToGateTranslator
+     * (org.sat4j.tools.GateTranslator)
      */
     @Override
     protected void addToGateTranslator(GateTranslator translator)
             throws ContradictionException {
-        VecInt lits = new VecInt();        
-        for (Variable var : vars) {
+        if (this.added)
+            return;
+        this.added = true;
+        VecInt lits = new VecInt();
+        for (Variable var : this.vars) {
             var.addToGateTranslator(translator);
             lits.push(var.getIndex());
         }
+        vars = null;
         translator.addAtLeast(lits, this.n);
     }
 
-    
-    
 }

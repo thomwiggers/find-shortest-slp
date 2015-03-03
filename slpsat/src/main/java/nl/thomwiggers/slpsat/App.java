@@ -11,8 +11,8 @@ package nl.thomwiggers.slpsat;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
-import java.util.List;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Scanner;
 
 /**
@@ -35,13 +35,15 @@ public class App {
         String path = App.class.getProtectionDomain().getCodeSource()
                 .getLocation().getPath();
         String decodedPath = URLDecoder.decode(path, "UTF-8");
-        decodedPath = decodedPath.substring(decodedPath.lastIndexOf('/')+1, decodedPath.length());
+        decodedPath = decodedPath.substring(decodedPath.lastIndexOf('/') + 1,
+                decodedPath.length());
 
         int minK = 0, k = 100;
 
         if (args.length == 0 || args.length > 2) {
-            System.err.println("\nProvide the number of lines to solve the SLP "
-                    + "problem for on the command line");
+            System.err
+                    .println("\nProvide the number of lines to solve the SLP "
+                            + "problem for on the command line");
             System.err.println("Like:\n\t" + decodedPath + " 6\n");
             System.err.println("Alternatively, state the range of k for which "
                     + "to try and solve the problem. (From high to low)");
@@ -54,7 +56,7 @@ public class App {
             minK = Integer.parseInt(args[1]);
         }
 
-        boolean[][] problem = readProblem(new Scanner(System.in));
+        boolean[][] problem = App.readProblem(new Scanner(System.in));
 
         if (problem == null) {
             System.err.println("No input problem provided on standard input.");
@@ -70,14 +72,13 @@ public class App {
         }
 
         System.out.println("Read problem");
-        
 
         for (; k >= minK; k--) {
             System.out.println("Solving for K = " + k + " lines…");
 
-            SlpProblem p = new SlpProblem(k, problem);        
+            SlpProblem p = new SlpProblem(k, problem);
             SlpProblem.Solution sol = null;
-            
+
             try {
                 sol = p.getSolution();
             } catch (Exception e) {
@@ -93,6 +94,12 @@ public class App {
         }
     }
 
+    /**
+     * Read the problem from standard input.
+     *
+     * @param reader
+     * @return
+     */
     private static boolean[][] readProblem(Scanner reader) {
         List<List<Boolean>> list = new LinkedList<>();
 
@@ -107,18 +114,16 @@ public class App {
                 String[] parts = line.split("\\s");
                 LinkedList<Boolean> linelist = new LinkedList<Boolean>();
                 for (String part : parts) {
-                    if (part.equals("1") && part.equals("0")) {
+                    if (part.equals("1") && part.equals("0"))
                         throw new IOException("Invalid input format!");
-                    }
                     linelist.add(part.equals("1"));
                 }
                 if (n == -1) {
                     n = linelist.size();
                 } else {
-                    if (n != linelist.size()) {
+                    if (n != linelist.size())
                         throw new IOException(
                                 "Invalid number of input variables in this line!");
-                    }
                 }
                 list.add(linelist);
             }
@@ -128,14 +133,14 @@ public class App {
             System.exit(2);
         }
 
-        if (n == -1) {
+        if (n == -1)
             return null;
-        }
 
         boolean[][] returnList = new boolean[list.size()][n];
         for (int i = 0; i < list.size(); i++) {
-            for (int j = 0; j < n; j++)
+            for (int j = 0; j < n; j++) {
                 returnList[i][j] = list.get(i).get(j);
+            }
         }
 
         return returnList;

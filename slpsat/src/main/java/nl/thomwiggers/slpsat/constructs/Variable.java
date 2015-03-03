@@ -16,11 +16,16 @@ public class Variable {
     /**
      * Next available index
      */
-    private static int nextFreeIndex = 1;
+    private static int nextFreeIndex = 10;
 
     static int getNextFreeIndex() {
+        if ((Variable.nextFreeIndex-10) % 1000 == 0) {
+            System.out.println("I've now seen " + Variable.nextFreeIndex + " elements");
+        }
         return Variable.nextFreeIndex++;
     }
+
+    protected boolean added = false;
 
     /**
      * Variable index in solver
@@ -36,10 +41,10 @@ public class Variable {
         this.name = name;
         this.index = y;
     }
-    
+
     /**
      * Get a new variable
-     * 
+     *
      * @param name The name of this variable
      */
     public Variable(String name) {
@@ -47,16 +52,16 @@ public class Variable {
         this.index = Variable.getNextFreeIndex();
     }
 
-    protected void addToGateTranslator(GateTranslator translator) throws ContradictionException {
+    protected void addToGateTranslator(GateTranslator translator)
+            throws ContradictionException {
     }
 
     public boolean findValuation(int[] model) {
         for (int val : model) {
-            if (val == this.index) {
+            if (val == this.index)
                 return true;
-            } else if (val == -this.index) {
+            else if (val == -this.index)
                 return false;
-            }
         }
         throw new RuntimeException("No value for this object!");
     }
@@ -67,7 +72,7 @@ public class Variable {
     public int getIndex() {
         return this.index;
     }
-    
+
     /**
      * @return the name
      */

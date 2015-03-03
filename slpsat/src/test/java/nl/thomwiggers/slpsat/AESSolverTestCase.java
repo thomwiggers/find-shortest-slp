@@ -12,7 +12,7 @@ import org.junit.Test;
  * @author Thom Wiggers
  *
  */
-@Ignore("Usually too little RAM")
+@Ignore("Takes at least 360GB RAM")
 public class AESSolverTestCase {
 
     private SlpProblem problem;
@@ -46,21 +46,21 @@ public class AESSolverTestCase {
                 { true, false, true, false, true, true, false, false } };
         this.problem = new SlpProblem(23, a);
     }
-    
+
     /**
      * Test if we can solve this for the AES problem in the paper
-     * 
+     *
      * Test method for
      * {@link nl.thomwiggers.slpsat.SlpProblem#getSolution()}.
      */
     @Test
     public void testGetSolution() throws Exception {
-        problem.getSolution();
+        this.problem.getSolution();
     }
-    
+
     @Test
     public void testGetSolutionUntuned() throws Exception {
-        problem.getSolution(false);
+        this.problem.getSolution(false);
     }
 
 }
