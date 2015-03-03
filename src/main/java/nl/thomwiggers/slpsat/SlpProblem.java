@@ -85,6 +85,7 @@ public class SlpProblem {
     private Variable[][] B;
     private Variable[][] C;
     private Variable[][] f;
+    private Variable[][] psiResults;
     private int k;
     private int m;
     private int n;
@@ -98,7 +99,7 @@ public class SlpProblem {
      * @param m the number of output variables
      * @param A the m×n matrix that represents the program
      */
-    public SlpProblem(int k, boolean[][] A) {
+    public SlpProblem(int k, boolean[][] A) {        
         int m = A.length;
         int n = A[0].length;
         this.A = new Variable[m][n];
@@ -134,6 +135,9 @@ public class SlpProblem {
                 this.f[i][j] = new Variable("f_{" + i + ", " + j + "}");
             }
         }
+        
+        psiResults = new Variable[k][k];
+        
     }
 
     private Variable beta1() {
@@ -179,6 +183,7 @@ public class SlpProblem {
 
     public Solution getSolution(boolean tunings) throws Exception {
         IProblem problem = this.getSolvableProblem(tunings);
+        System.out.println("Transformed problem");
         if (!problem.isSatisfiable())
             return null;
 
@@ -228,6 +233,16 @@ public class SlpProblem {
         }
 
         return this.solver;
+    }
+    
+    public ISolver getDimacsSolver(boolean tunings) throws ContradictionException{
+        ISolver solver = SolverFactory.newDimacsOutput();
+        GateTranslator translator = new GateTranslator(solver);
+        this.getProblem().addToGateTranslator(translator);
+        if (tunings) {
+            this.getTunings().addToGateTranslator(translator);
+        }
+        return solver;
     }
 
     /**
@@ -311,12 +326,23 @@ public class SlpProblem {
                 this.getTuning2(), getTuning4(), getTuning5(), getTuning6() }));
     }
 
+    
+    
     private Variable psi(int j, int i) {
+        if (psiResults[j][i] != null) {
+            return psiResults[j][i];
+        }
+        
         Variable[] xorn = new Variable[i];
         for (int p = 0; p < i; p++) {
-            xorn[p] = new And(this.C[i][p], this.psi(j, p));
+            Variable psi = psiResults[j][p];
+            if (psi == null) {
+                psi = this.psi(j, p);
+            }
+            xorn[p] = new And(this.C[i][p], psi);
         }
-        return new Xor(this.B[i][j], new XorN(xorn));
+        psiResults[j][i] = new Xor(this.B[i][j], new XorN(xorn));
+        return psiResults[j][i];
 
     }
 }
