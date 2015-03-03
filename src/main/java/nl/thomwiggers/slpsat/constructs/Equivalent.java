@@ -18,7 +18,7 @@ public class Equivalent extends Variable {
     private Variable q;
 
     /**
-     * 
+     *
      */
     public Equivalent(Variable p, Variable q) {
         super("equiv");
@@ -26,15 +26,24 @@ public class Equivalent extends Variable {
         this.q = q;
     }
 
-    /* (non-Javadoc)
-     * @see nl.thomwiggers.slpsat.constructs.AbstractLogicConstruct#addToGateTranslator(org.sat4j.tools.GateTranslator)
+    /*
+     * (non-Javadoc)
+     * @see nl.thomwiggers.slpsat.constructs.AbstractLogicConstruct#
+     * addToGateTranslator(org.sat4j.tools.GateTranslator)
      */
     @Override
     protected void addToGateTranslator(GateTranslator translator)
             throws ContradictionException {
-        p.addToGateTranslator(translator);
-        q.addToGateTranslator(translator);
-        translator.iff(getIndex(), new VecInt(new int[] {p.getIndex(), q.getIndex()}));
+        if (this.added)
+            return;
+        this.added = true;
+        this.p.addToGateTranslator(translator);
+        this.q.addToGateTranslator(translator);
+
+        translator.iff(this.getIndex(),
+                new VecInt(new int[] { this.p.getIndex(), this.q.getIndex() }));
+
+        p = q = null;
     }
 
 }

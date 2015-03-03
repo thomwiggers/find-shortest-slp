@@ -14,7 +14,7 @@ import org.sat4j.tools.GateTranslator;
  */
 public class OrN extends Variable {
 
-    protected final Variable[] vars;
+    protected Variable[] vars;
 
     /**
      * @param y
@@ -25,7 +25,7 @@ public class OrN extends Variable {
     }
 
     /**
-     * 
+     *
      */
     public OrN(Variable[] vars) {
         super("OrN");
@@ -40,12 +40,17 @@ public class OrN extends Variable {
     @Override
     protected void addToGateTranslator(GateTranslator translator)
             throws ContradictionException {
+        if (this.added)
+            return;
+        this.added = true;
+
         VecInt lits = new VecInt();
-        for (Variable var : vars) {
+        for (Variable var : this.vars) {
             var.addToGateTranslator(translator);
             lits.push(var.getIndex());
         }
-        translator.or(getIndex(), lits);
+        translator.or(this.getIndex(), lits);
+        this.vars = null;
 
     }
 

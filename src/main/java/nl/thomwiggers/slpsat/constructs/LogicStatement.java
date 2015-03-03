@@ -16,15 +16,16 @@ public class LogicStatement {
     private Variable statement;
 
     /**
-     * 
+     *
      */
     public LogicStatement(Variable statement) {
         this.statement = statement;
     }
-    
-    public void addToGateTranslator(GateTranslator translator) throws ContradictionException {
-        statement.addToGateTranslator(translator);
-        translator.gateTrue(statement.getIndex());
+
+    public void addToGateTranslator(GateTranslator translator)
+            throws ContradictionException {
+        this.statement.addToGateTranslator(translator);
+        translator.gateTrue(this.statement.getIndex());
     }
 
 }

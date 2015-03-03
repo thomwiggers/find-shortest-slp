@@ -15,14 +15,14 @@ public class Xor extends XorN {
      * @param vars
      */
     public Xor(int y, Variable p, Variable q) {
-        super(y, new Variable[] {p, q});
+        super(y, new Variable[] { p, q });
     }
 
     /**
      * @param vars
      */
     public Xor(Variable p, Variable q) {
-        super(new Variable[] {p, q});
+        super(new Variable[] { p, q });
     }
 
 }

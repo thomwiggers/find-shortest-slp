@@ -9,7 +9,7 @@ import org.sat4j.tools.GateTranslator;
 
 /**
  * False constant
- * 
+ *
  * @author Thom Wiggers
  *
  */
@@ -21,16 +21,16 @@ public class False extends Variable {
     public False() {
         super("falsehood");
     }
-    
+
     /**
      * Named false constant
-     * 
+     *
      * @param name the name of this constant
      */
     public False(String name) {
         super(name);
     }
-    
+
     /*
      * (non-Javadoc)
      * @see
@@ -40,7 +40,10 @@ public class False extends Variable {
     @Override
     protected void addToGateTranslator(GateTranslator translator)
             throws ContradictionException {
-        translator.gateFalse(getIndex());
+        if (this.added)
+            return;
+        this.added = true;
+        translator.gateFalse(this.getIndex());
     }
 
 }

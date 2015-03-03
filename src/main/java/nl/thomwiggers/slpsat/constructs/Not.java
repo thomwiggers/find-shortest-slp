@@ -13,7 +13,7 @@ import org.sat4j.tools.GateTranslator;
  */
 public class Not extends Variable {
 
-    private final Variable p;
+    private Variable p;
 
     /**
      * @param y
@@ -25,7 +25,7 @@ public class Not extends Variable {
     }
 
     /**
-     * 
+     *
      */
     public Not(Variable p) {
         super("not");
@@ -40,8 +40,12 @@ public class Not extends Variable {
     @Override
     protected void addToGateTranslator(GateTranslator translator)
             throws ContradictionException {
-        p.addToGateTranslator(translator);
-        translator.not(getIndex(), p.getIndex());
+        if (this.added)
+            return;
+        this.added = true;
+        this.p.addToGateTranslator(translator);
+        translator.not(this.getIndex(), this.p.getIndex());
+        p = null;
     }
 
 }

@@ -26,7 +26,7 @@ public class Implies extends Variable {
     }
 
     /**
-     * 
+     *
      */
     public Implies(Variable p, Variable q) {
         super("Implies");
@@ -34,19 +34,26 @@ public class Implies extends Variable {
         this.q = q;
     }
 
-    /* (non-Javadoc)
-     * @see nl.thomwiggers.slpsat.constructs.AbstractLogicConstruct#addToGateTranslator(org.sat4j.tools.GateTranslator)
+    /*
+     * (non-Javadoc)
+     * @see nl.thomwiggers.slpsat.constructs.AbstractLogicConstruct#
+     * addToGateTranslator(org.sat4j.tools.GateTranslator)
      */
     @Override
     protected void addToGateTranslator(GateTranslator translator)
             throws ContradictionException {
-        p.addToGateTranslator(translator);
-        q.addToGateTranslator(translator);
+        if (this.added)
+            return;
+        this.added = true;
+        this.p.addToGateTranslator(translator);
+        this.q.addToGateTranslator(translator);
         True z = new True();
         z.addToGateTranslator(translator);
-        translator.ite(getIndex(), p.getIndex(), q.getIndex(), z.getIndex());
-        //Not operation = new Not(new And(this.p, new Not(this.q)));
-        //operation.addToGateTranslator(translator);
+        translator.ite(this.getIndex(), this.p.getIndex(), this.q.getIndex(),
+                z.getIndex());
+        // Not operation = new Not(new And(this.p, new Not(this.q)));
+        // operation.addToGateTranslator(translator);
+        p = q = null;
 
     }
 

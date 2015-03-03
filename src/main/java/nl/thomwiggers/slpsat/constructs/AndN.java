@@ -14,8 +14,8 @@ import org.sat4j.tools.GateTranslator;
  */
 public class AndN extends Variable {
 
-    protected final Variable[] variables;
-    
+    protected Variable[] variables;
+
     /**
      * @param y
      */
@@ -25,24 +25,30 @@ public class AndN extends Variable {
     }
 
     /**
-     * 
+     *
      */
     public AndN(Variable[] vars) {
         super("andN");
         this.variables = vars;
     }
 
-    /* (non-Javadoc)
-     * @see nl.thomwiggers.slpsat.constructs.AbstractLogicConstruct#addToGateTranslator(org.sat4j.tools.GateTranslator)
+    /*
+     * (non-Javadoc)
+     * @see nl.thomwiggers.slpsat.constructs.AbstractLogicConstruct#
+     * addToGateTranslator(org.sat4j.tools.GateTranslator)
      */
     @Override
     protected void addToGateTranslator(GateTranslator translator)
             throws ContradictionException {
+        if (this.added)
+            return;
+        this.added = true;
         VecInt literals = new VecInt();
         for (Variable var : this.variables) {
             var.addToGateTranslator(translator);
             literals.push(var.getIndex());
         }
+        variables = null;
         translator.and(this.getIndex(), literals);
     }
 
