@@ -35,16 +35,18 @@ public class App {
         String path = App.class.getProtectionDomain().getCodeSource()
                 .getLocation().getPath();
         String decodedPath = URLDecoder.decode(path, "UTF-8");
+        decodedPath = decodedPath.substring(decodedPath.lastIndexOf('/')+1, decodedPath.length());
 
         int minK = 0, k = 100;
 
         if (args.length == 0 || args.length > 2) {
-            System.err.println("Provide the number of lines to solve the SLP "
+            System.err.println("\nProvide the number of lines to solve the SLP "
                     + "problem for on the command line");
             System.err.println("Like:\n\t" + decodedPath + " 6\n");
             System.err.println("Alternatively, state the range of k for which "
                     + "to try and solve the problem. (From high to low)");
             System.err.println("Like:\n\t" + decodedPath + " 10 6\n");
+            System.exit(1);
         } else if (args.length == 1) {
             minK = k = Integer.parseInt(args[0]);
         } else {
@@ -96,7 +98,7 @@ public class App {
 
         try {
             while (reader.hasNextLine()) {
-                String line = reader.nextLine();
+                String line = reader.nextLine().trim();
                 if (line.isEmpty()) {
                     break;
                 }
