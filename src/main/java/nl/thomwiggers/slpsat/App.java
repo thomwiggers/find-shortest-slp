@@ -25,6 +25,7 @@ public class App {
      * Main method
      *
      * @param args command line arguments
+     * @throws UnsupportedEncodingException
      */
     public static void main(String[] args) throws UnsupportedEncodingException {
         System.out.println("SLP minimizer using SAT");
@@ -42,8 +43,8 @@ public class App {
 
         if (args.length == 0 || args.length > 2) {
             System.err
-                    .println("\nProvide the number of lines to solve the SLP "
-                            + "problem for on the command line");
+            .println("\nProvide the number of lines to solve the SLP "
+                    + "problem for on the command line");
             System.err.println("Like:\n\t" + decodedPath + " 6\n");
             System.err.println("Alternatively, state the range of k for which "
                     + "to try and solve the problem. (From high to low)");

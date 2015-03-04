@@ -5,12 +5,16 @@
 package nl.thomwiggers.slpsat.constructs;
 
 /**
+ * p v q
+ *
  * @author Thom Wiggers
  *
  */
 public class Or extends OrN {
 
     /**
+     * p v q
+     *
      * @param p
      * @param q
      */

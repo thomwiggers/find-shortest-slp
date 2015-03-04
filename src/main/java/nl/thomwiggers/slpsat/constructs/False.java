@@ -19,7 +19,7 @@ public class False extends Variable {
      * Empty true variable
      */
     public False() {
-        super("falsehood");
+        super(2, "falsehood");
     }
 
     /**
@@ -28,7 +28,7 @@ public class False extends Variable {
      * @param name the name of this constant
      */
     public False(String name) {
-        super(name);
+        super(2, name);
     }
 
     /*
@@ -40,9 +40,9 @@ public class False extends Variable {
     @Override
     protected void addToGateTranslator(GateTranslator translator)
             throws ContradictionException {
-        if (this.added)
+        if (this.addedToGateTranslator)
             return;
-        this.added = true;
+        this.addedToGateTranslator = true;
         translator.gateFalse(this.getIndex());
     }
 

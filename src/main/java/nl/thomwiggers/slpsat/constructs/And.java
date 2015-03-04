@@ -5,12 +5,17 @@
 package nl.thomwiggers.slpsat.constructs;
 
 /**
+ * p AND q
+ *
  * @author Thom Wiggers
  *
  */
 public class And extends AndN {
 
     /**
+     * p ^ q
+     *
+     * @param y index
      * @param p
      * @param q
      */
@@ -19,6 +24,8 @@ public class And extends AndN {
     }
 
     /**
+     * p ^ q
+     *
      * @param p
      * @param q
      */

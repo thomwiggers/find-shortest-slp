@@ -9,16 +9,28 @@ import org.sat4j.specs.ContradictionException;
 import org.sat4j.tools.GateTranslator;
 
 /**
+ * p <-> q
+ *
  * @author Thom Wiggers
  *
  */
 public class Equivalent extends Variable {
 
+    /**
+     * left-hand side
+     */
     private Variable p;
+
+    /**
+     * right-hand side
+     */
     private Variable q;
 
     /**
+     * p <=> q
      *
+     * @param p
+     * @param q
      */
     public Equivalent(Variable p, Variable q) {
         super("equiv");
@@ -34,16 +46,16 @@ public class Equivalent extends Variable {
     @Override
     protected void addToGateTranslator(GateTranslator translator)
             throws ContradictionException {
-        if (this.added)
+        if (this.addedToGateTranslator)
             return;
-        this.added = true;
+        this.addedToGateTranslator = true;
         this.p.addToGateTranslator(translator);
         this.q.addToGateTranslator(translator);
 
         translator.iff(this.getIndex(),
                 new VecInt(new int[] { this.p.getIndex(), this.q.getIndex() }));
 
-        p = q = null;
+        this.p = this.q = null;
     }
 
 }

@@ -9,15 +9,23 @@ import org.sat4j.specs.ContradictionException;
 import org.sat4j.tools.GateTranslator;
 
 /**
+ * Xor of N vars
+ *
  * @author Thom Wiggers
  *
  */
 public class XorN extends Variable {
 
+    /**
+     * The variables
+     */
     private Variable[] vars;
 
     /**
-     * @param y
+     * XOR between all vars
+     *
+     * @param y index
+     * @param vars
      */
     public XorN(int y, Variable[] vars) {
         super(y, "XorN");
@@ -25,7 +33,9 @@ public class XorN extends Variable {
     }
 
     /**
+     * XOR between all vars
      *
+     * @param vars
      */
     public XorN(Variable[] vars) {
         super("XorN");
@@ -40,9 +50,9 @@ public class XorN extends Variable {
     @Override
     protected void addToGateTranslator(GateTranslator translator)
             throws ContradictionException {
-        if (this.added)
+        if (this.addedToGateTranslator)
             return;
-        this.added = true;
+        this.addedToGateTranslator = true;
         VecInt literals = new VecInt();
         for (Variable var : this.vars) {
             var.addToGateTranslator(translator);
