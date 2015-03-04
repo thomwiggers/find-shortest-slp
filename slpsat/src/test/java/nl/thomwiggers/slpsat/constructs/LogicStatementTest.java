@@ -4,8 +4,9 @@
  */
 package nl.thomwiggers.slpsat.constructs;
 
-import junit.framework.TestCase;
-
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 import org.sat4j.minisat.SolverFactory;
 import org.sat4j.specs.ContradictionException;
 import org.sat4j.specs.TimeoutException;
@@ -15,18 +16,17 @@ import org.sat4j.tools.GateTranslator;
  * @author Thom Wiggers
  *
  */
-public class LogicStatementTest extends TestCase {
+public class LogicStatementTest {
 
     /**
      * The {@link GateTranslator} to use
      */
     private GateTranslator translator;
 
-    /*
-     * (non-Javadoc)
-     * @see junit.framework.TestCase#setUp()
+    /**
+     * set up a {@Link GateTranslator}
      */
-    @Override
+    @Before
     public void setUp() {
         this.translator = new GateTranslator(SolverFactory.newLight());
     }
@@ -40,13 +40,14 @@ public class LogicStatementTest extends TestCase {
      * @throws ContradictionException
      * @throws TimeoutException
      */
+    @Test
     public void testAddToGateTranslator1() throws ContradictionException,
             TimeoutException {
         LogicStatement statement;
         statement = new LogicStatement(new And(new Variable("a"), new Variable(
                 "b")));
         statement.addToGateTranslator(this.translator);
-        TestCase.assertTrue(this.translator.getSolvingEngine().isSatisfiable());
+        Assert.assertTrue(this.translator.getSolvingEngine().isSatisfiable());
     }
 
     /**
@@ -56,13 +57,14 @@ public class LogicStatementTest extends TestCase {
      * @throws ContradictionException
      * @throws TimeoutException
      */
+    @Test
     public void testAddToGateTranslator2() throws ContradictionException,
             TimeoutException {
         LogicStatement statement;
         statement = new LogicStatement(new Or(new Variable("a"), new Variable(
                 "b")));
         statement.addToGateTranslator(this.translator);
-        TestCase.assertTrue(this.translator.getSolvingEngine().isSatisfiable());
+        Assert.assertTrue(this.translator.getSolvingEngine().isSatisfiable());
     }
 
     /**
@@ -72,12 +74,13 @@ public class LogicStatementTest extends TestCase {
      * @throws ContradictionException
      * @throws TimeoutException
      */
+    @Test
     public void testAddToGateTranslator3() throws ContradictionException,
             TimeoutException {
         LogicStatement statement;
         statement = new LogicStatement(new Not(new Variable("b")));
         statement.addToGateTranslator(this.translator);
-        TestCase.assertTrue(this.translator.getSolvingEngine().isSatisfiable());
+        Assert.assertTrue(this.translator.getSolvingEngine().isSatisfiable());
     }
 
     /**
@@ -89,13 +92,14 @@ public class LogicStatementTest extends TestCase {
      * @throws ContradictionException
      * @throws TimeoutException
      */
+    @Test
     public void testAddToGateTranslator4() throws ContradictionException,
             TimeoutException {
         LogicStatement statement;
         statement = new LogicStatement(new Equivalent(new Variable("a"),
                 new Variable("b")));
         statement.addToGateTranslator(this.translator);
-        TestCase.assertTrue(this.translator.getSolvingEngine().isSatisfiable());
+        Assert.assertTrue(this.translator.getSolvingEngine().isSatisfiable());
     }
 
     /**
@@ -107,12 +111,13 @@ public class LogicStatementTest extends TestCase {
      * @throws ContradictionException
      * @throws TimeoutException
      */
+    @Test
     public void testAddToGateTranslator5() throws ContradictionException,
             TimeoutException {
         LogicStatement statement;
         statement = new LogicStatement(new Equivalent(new False(), new False()));
         statement.addToGateTranslator(this.translator);
-        TestCase.assertTrue(this.translator.getSolvingEngine().isSatisfiable());
+        Assert.assertTrue(this.translator.getSolvingEngine().isSatisfiable());
     }
 
     /**
@@ -124,15 +129,18 @@ public class LogicStatementTest extends TestCase {
      * @throws ContradictionException
      * @throws TimeoutException
      */
+    @Test
     public void testAddToGateTranslator6() throws ContradictionException,
             TimeoutException {
         LogicStatement statement;
+
         statement = new LogicStatement(new Implies(new False(), new False()));
         statement.addToGateTranslator(this.translator);
-        TestCase.assertTrue(this.translator.getSolvingEngine().isSatisfiable());
+        Assert.assertTrue(this.translator.getSolvingEngine().isSatisfiable());
+
         statement = new LogicStatement(new Implies(new False(), new True()));
         statement.addToGateTranslator(this.translator);
-        TestCase.assertTrue(this.translator.getSolvingEngine().isSatisfiable());
+        Assert.assertTrue(this.translator.getSolvingEngine().isSatisfiable());
     }
 
     /**
@@ -144,13 +152,14 @@ public class LogicStatementTest extends TestCase {
      * @throws ContradictionException
      * @throws TimeoutException
      */
+    @Test
     public void testAddToGateTranslatorImpliesFalse()
             throws ContradictionException, TimeoutException {
         LogicStatement statement;
         statement = new LogicStatement(new Not(new Implies(new True(),
                 new False())));
         statement.addToGateTranslator(this.translator);
-        TestCase.assertTrue(this.translator.getSolvingEngine().isSatisfiable());
+        Assert.assertTrue(this.translator.getSolvingEngine().isSatisfiable());
     }
 
     /**
@@ -161,6 +170,7 @@ public class LogicStatementTest extends TestCase {
      *
      * @throws TimeoutException
      */
+    @Test
     public void testAddToGateTranslatorImpliesFalseRaises()
             throws TimeoutException {
         LogicStatement statement;
@@ -168,13 +178,13 @@ public class LogicStatementTest extends TestCase {
         boolean raised = false;
         try {
             statement.addToGateTranslator(this.translator);
-            TestCase.assertFalse(this.translator.getSolvingEngine()
+            Assert.assertFalse(this.translator.getSolvingEngine()
                     .isSatisfiable());
         } catch (ContradictionException e) {
             raised = true;
         }
         if (!raised) {
-            TestCase.fail("No exception thrown!");
+            Assert.fail("No exception thrown!");
         }
     }
 
@@ -187,6 +197,7 @@ public class LogicStatementTest extends TestCase {
      * @throws ContradictionException
      * @throws TimeoutException
      */
+    @Test
     public void testAddToGateTranslatorNotTrue() throws ContradictionException,
             TimeoutException {
         LogicStatement statement;
@@ -194,7 +205,7 @@ public class LogicStatementTest extends TestCase {
         statement.addToGateTranslator(this.translator);
         boolean satisfiable = this.translator.getSolvingEngine()
                 .isSatisfiable();
-        TestCase.assertTrue(satisfiable);
+        Assert.assertTrue(satisfiable);
     }
 
 }
