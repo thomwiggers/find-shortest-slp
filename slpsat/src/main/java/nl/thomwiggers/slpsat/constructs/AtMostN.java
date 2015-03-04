@@ -9,16 +9,27 @@ import org.sat4j.specs.ContradictionException;
 import org.sat4j.tools.GateTranslator;
 
 /**
+ * At most N may be true
+ *
  * @author Thom Wiggers
  *
  */
 public class AtMostN extends Variable {
 
+    /**
+     * cases
+     */
     private int n;
+
+    /**
+     * variables
+     */
     private Variable[] vars;
 
     /**
      * @param y
+     * @param n number of cases to be true at most
+     * @param vars variables
      */
     public AtMostN(int y, int n, Variable[] vars) {
         super(y, "AtMost" + n);
@@ -27,7 +38,10 @@ public class AtMostN extends Variable {
     }
 
     /**
+     * at most n may be true of vars
      *
+     * @param n
+     * @param vars
      */
     public AtMostN(int n, Variable[] vars) {
         super("AtMost" + n);
@@ -44,15 +58,15 @@ public class AtMostN extends Variable {
     @Override
     protected void addToGateTranslator(GateTranslator translator)
             throws ContradictionException {
-        if (this.added)
+        if (this.addedToGateTranslator)
             return;
-        this.added = true;
+        this.addedToGateTranslator = true;
         VecInt lits = new VecInt();
         for (Variable var : this.vars) {
             var.addToGateTranslator(translator);
             lits.push(var.getIndex());
         }
-        vars = null;
+        this.vars = null;
         translator.addAtMost(lits, this.n);
     }
 

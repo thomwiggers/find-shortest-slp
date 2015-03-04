@@ -19,14 +19,14 @@ public class True extends Variable {
      * Empty true constant
      */
     public True() {
-        super("truth");
+        super(1, "truth");
     }
 
     /**
      * @param name The name of this constant
      */
     public True(String name) {
-        super(name);
+        super(1, name);
     }
 
     /*
@@ -38,9 +38,9 @@ public class True extends Variable {
     @Override
     protected void addToGateTranslator(GateTranslator translator)
             throws ContradictionException {
-        if (this.added)
+        if (this.addedToGateTranslator)
             return;
-        this.added = true;
+        this.addedToGateTranslator = true;
         translator.gateTrue(this.getIndex());
     }
 }

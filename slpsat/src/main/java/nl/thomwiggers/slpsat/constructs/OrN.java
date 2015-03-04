@@ -9,6 +9,8 @@ import org.sat4j.specs.ContradictionException;
 import org.sat4j.tools.GateTranslator;
 
 /**
+ * Or of vars (p1 v p2 v p3 ...)
+ *
  * @author Thom Wiggers
  *
  */
@@ -17,7 +19,10 @@ public class OrN extends Variable {
     protected Variable[] vars;
 
     /**
-     * @param y
+     * Or of vars
+     *
+     * @param y index
+     * @param vars the variables
      */
     public OrN(int y, Variable[] vars) {
         super(y, "OrN");
@@ -25,7 +30,9 @@ public class OrN extends Variable {
     }
 
     /**
+     * Or of vars
      *
+     * @param vars
      */
     public OrN(Variable[] vars) {
         super("OrN");
@@ -40,9 +47,9 @@ public class OrN extends Variable {
     @Override
     protected void addToGateTranslator(GateTranslator translator)
             throws ContradictionException {
-        if (this.added)
+        if (this.addedToGateTranslator)
             return;
-        this.added = true;
+        this.addedToGateTranslator = true;
 
         VecInt lits = new VecInt();
         for (Variable var : this.vars) {

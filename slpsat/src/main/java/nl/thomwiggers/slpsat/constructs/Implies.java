@@ -8,6 +8,8 @@ import org.sat4j.specs.ContradictionException;
 import org.sat4j.tools.GateTranslator;
 
 /**
+ * Logical implication (p -> q)
+ *
  * @author Thom Wiggers
  *
  */
@@ -17,7 +19,11 @@ public class Implies extends Variable {
     private Variable q;
 
     /**
-     * @param y
+     * Construct a new implication (p -> q)
+     *
+     * @param y index
+     * @param p
+     * @param q
      */
     public Implies(int y, Variable p, Variable q) {
         super(y, "Implies");
@@ -26,7 +32,10 @@ public class Implies extends Variable {
     }
 
     /**
+     * p -> q
      *
+     * @param p
+     * @param q
      */
     public Implies(Variable p, Variable q) {
         super("Implies");
@@ -42,9 +51,9 @@ public class Implies extends Variable {
     @Override
     protected void addToGateTranslator(GateTranslator translator)
             throws ContradictionException {
-        if (this.added)
+        if (this.addedToGateTranslator)
             return;
-        this.added = true;
+        this.addedToGateTranslator = true;
         this.p.addToGateTranslator(translator);
         this.q.addToGateTranslator(translator);
         True z = new True();
@@ -53,7 +62,7 @@ public class Implies extends Variable {
                 z.getIndex());
         // Not operation = new Not(new And(this.p, new Not(this.q)));
         // operation.addToGateTranslator(translator);
-        p = q = null;
+        this.p = this.q = null;
 
     }
 

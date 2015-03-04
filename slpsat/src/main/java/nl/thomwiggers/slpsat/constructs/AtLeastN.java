@@ -18,7 +18,9 @@ public class AtLeastN extends Variable {
     private Variable[] vars;
 
     /**
-     * @param y
+     * @param y index
+     * @param n at least N
+     * @param vars of these variables
      */
     public AtLeastN(int y, int n, Variable[] vars) {
         super(y, "AtLeast" + n);
@@ -27,7 +29,8 @@ public class AtLeastN extends Variable {
     }
 
     /**
-     *
+     * @param n at least N
+     * @param vars of these vars
      */
     public AtLeastN(int n, Variable[] vars) {
         super("AtLeast" + n);
@@ -44,15 +47,15 @@ public class AtLeastN extends Variable {
     @Override
     protected void addToGateTranslator(GateTranslator translator)
             throws ContradictionException {
-        if (this.added)
+        if (this.addedToGateTranslator)
             return;
-        this.added = true;
+        this.addedToGateTranslator = true;
         VecInt lits = new VecInt();
         for (Variable var : this.vars) {
             var.addToGateTranslator(translator);
             lits.push(var.getIndex());
         }
-        vars = null;
+        this.vars = null;
         translator.addAtLeast(lits, this.n);
     }
 

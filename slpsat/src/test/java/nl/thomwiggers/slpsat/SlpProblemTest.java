@@ -4,26 +4,30 @@
  */
 package nl.thomwiggers.slpsat;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-
-import org.junit.Test;
-import org.junit.Ignore;
+import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Ignore;
+import org.junit.Test;
 import org.sat4j.specs.ContradictionException;
 import org.sat4j.specs.TimeoutException;
 
 /**
+ * Test various SLP problems
+ *
  * @author Thom Wiggers
  *
  */
-public class SlpProblemTest{
+public class SlpProblemTest {
 
+    /**
+     * The problem we test against
+     */
     private SlpProblem problem;
 
-    /*
-     * (non-Javadoc)
-     * @see junit.framework.TestCase#setUp()
+    /**
+     * Set up before each test case
+     *
+     * @throws Exception
      */
     @Before
     public void setUp() throws Exception {
@@ -36,28 +40,42 @@ public class SlpProblemTest{
     }
 
     /**
-     * Test method for
-     * {@link nl.thomwiggers.slpsat.SlpProblem#getProblem()}.
+     * Test method for {@link SlpProblem#getProblem()}.
      */
     @Test
     public void testGetProblem() {
-        assertNotNull(this.problem.getProblem());
+        Assert.assertNotNull(this.problem.getProblem());
     }
 
+    /**
+     * Confirm getSolution doesn't error
+     *
+     * @throws Exception
+     */
     @Test
     public void testGetSolution() throws Exception {
         SlpProblem.Solution solution = this.problem.getSolution();
-        assertNotNull(solution);
+        Assert.assertNotNull(solution);
     }
 
+    /**
+     * Confirm getSolvableProblem() doesn't error
+     *
+     * @throws ContradictionException
+     */
     @Test
     public void testGetSolvableProblem() throws ContradictionException {
-        assertNotNull(this.problem.getSolvableProblem());
+        Assert.assertNotNull(this.problem.getSolvableProblem());
     }
 
+    /**
+     * Test getSolvableProblem works without tunings
+     *
+     * @throws ContradictionException
+     */
     @Test
     public void testGetSolvableProblemNoTunings() throws ContradictionException {
-        assertNotNull(this.problem.getSolvableProblem(false));
+        Assert.assertNotNull(this.problem.getSolvableProblem(false));
     }
 
     /**
@@ -66,31 +84,54 @@ public class SlpProblemTest{
      */
     @Test
     public void testGetTunings() {
-        assertNotNull(this.problem.getTunings());
+        Assert.assertNotNull(this.problem.getTunings());
     }
 
+    /**
+     * Test if we can solve the problem with tunings
+     *
+     * @throws ContradictionException
+     * @throws TimeoutException
+     */
     @Test
     public void testIsSolvableTuned() throws ContradictionException,
-    TimeoutException {
-        assertTrue(this.problem.getSolvableProblem(true)
-                .isSatisfiable());
+            TimeoutException {
+        Assert.assertTrue(this.problem.getSolvableProblem(true).isSatisfiable());
     }
 
+    /**
+     * solve the problem without tunings
+     *
+     * @throws ContradictionException
+     * @throws TimeoutException
+     */
     @Test
     public void testIsSolvableUntuned() throws ContradictionException,
-    TimeoutException {
-        assertTrue(this.problem.getSolvableProblem(false)
+            TimeoutException {
+        Assert.assertTrue(this.problem.getSolvableProblem(false)
                 .isSatisfiable());
     }
 
-    @Ignore("Doesn't work")
+    /**
+     * Try to export the problem.
+     *
+     * @throws ContradictionException
+     */
+    @Ignore("Doesn't work because of exactn's degree")
+    @Test
     public void testToDimacsTuned() throws ContradictionException {
-        assertNotNull(this.problem.getDimacsSolver(true));
+        Assert.assertNotNull(this.problem.getDimacsSolver(true));
     }
 
-    @Ignore("Doesn't work")
+    /**
+     * Try to export the problem without tunings
+     *
+     * @throws ContradictionException
+     */
+    @Ignore("Doesn't work because of exactn's degree > 1")
+    @Test
     public void testToDimacsUntuned() throws ContradictionException {
-        assertNotNull(this.problem.getDimacsSolver(false));
+        Assert.assertNotNull(this.problem.getDimacsSolver(false));
     }
 
 }

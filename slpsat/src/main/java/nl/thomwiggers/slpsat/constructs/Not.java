@@ -8,15 +8,23 @@ import org.sat4j.specs.ContradictionException;
 import org.sat4j.tools.GateTranslator;
 
 /**
+ * ~p
+ *
  * @author Thom Wiggers
  *
  */
 public class Not extends Variable {
 
+    /**
+     * var to negate
+     */
     private Variable p;
 
     /**
-     * @param y
+     * ~p
+     *
+     * @param y index
+     * @param p
      */
     public Not(int y, Variable p) {
         super(y, "not");
@@ -25,7 +33,9 @@ public class Not extends Variable {
     }
 
     /**
+     * ~p
      *
+     * @param p
      */
     public Not(Variable p) {
         super("not");
@@ -40,12 +50,12 @@ public class Not extends Variable {
     @Override
     protected void addToGateTranslator(GateTranslator translator)
             throws ContradictionException {
-        if (this.added)
+        if (this.addedToGateTranslator)
             return;
-        this.added = true;
+        this.addedToGateTranslator = true;
         this.p.addToGateTranslator(translator);
         translator.not(this.getIndex(), this.p.getIndex());
-        p = null;
+        this.p = null;
     }
 
 }

@@ -9,12 +9,17 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 /**
+ * Try to solve the AES problem from the paper
+ *
  * @author Thom Wiggers
  *
  */
-@Ignore("Takes at least 360GB RAM")
+@Ignore("Takes at least 32GB RAM")
 public class AESSolverTestCase {
 
+    /**
+     * The AES problem instance
+     */
     private SlpProblem problem;
 
     /**
@@ -50,14 +55,23 @@ public class AESSolverTestCase {
     /**
      * Test if we can solve this for the AES problem in the paper
      *
-     * Test method for
-     * {@link nl.thomwiggers.slpsat.SlpProblem#getSolution()}.
+     * Test method for {@link SlpProblem#getSolution()}.
+     *
+     * @throws Exception
      */
     @Test
     public void testGetSolution() throws Exception {
         this.problem.getSolution();
     }
 
+    /**
+     * Try to solve the paper's AES problem without the tunings.
+     *
+     * Test method for {@link SlpProblem#getSolution()}
+     *
+     * @throws Exception
+     */
+    @Ignore("Extra painful because not tuned")
     @Test
     public void testGetSolutionUntuned() throws Exception {
         this.problem.getSolution(false);

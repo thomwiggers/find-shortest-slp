@@ -27,27 +27,64 @@ import org.sat4j.minisat.SolverFactory;
 import org.sat4j.specs.ContradictionException;
 import org.sat4j.specs.IProblem;
 import org.sat4j.specs.ISolver;
+import org.sat4j.tools.DimacsStringSolver;
 import org.sat4j.tools.GateTranslator;
 
 /**
  * The SLP problem as described by Fuhs and Schneider-Kamp in
- * Synthesizing Shortest Linear Straight-Line Programs over GF(2) using
- * SAT.
+ * "Synthesizing Shortest Linear Straight-Line Programs over GF(2) using
+ * SAT".
  *
  * @author Thom Wiggers
  *
  */
 public class SlpProblem {
 
+    /**
+     * Represent one solution
+     *
+     * @author Thom Wiggers
+     *
+     */
     public class Solution {
 
+        /**
+         * The b matrix
+         */
         public final boolean[][] B;
+
+        /**
+         * The C matrix
+         */
         public final boolean[][] C;
+
+        /**
+         * The F matrix
+         */
         public final boolean[][] f;
+
+        /**
+         * The number of lines
+         */
         public final int k;
+
+        /**
+         * The number of outputs
+         */
         public final int m;
+
+        /**
+         * The number of inputs
+         */
         public final int n;
 
+        /**
+         * Construct a new solution object
+         *
+         * @param B the values for B
+         * @param C the values for C
+         * @param f the values for f
+         */
         private Solution(boolean[][] B, boolean[][] C, boolean[][] f) {
             this.B = B;
             this.C = C;
@@ -57,6 +94,12 @@ public class SlpProblem {
             this.m = SlpProblem.this.m;
         }
 
+        /**
+         * Easily print matrices
+         *
+         * @param a matrix
+         * @param sb StringBuilder to append to
+         */
         private void appendArrayToStringBuilder(boolean[][] a, StringBuilder sb) {
             sb.append(" = [\n");
             for (boolean[] row : a) {
@@ -69,6 +112,10 @@ public class SlpProblem {
             sb.append("]\n");
         }
 
+        /*
+         * (non-Javadoc)
+         * @see java.lang.Object#toString()
+         */
         @Override
         public String toString() {
             StringBuilder sb = new StringBuilder("B");
@@ -81,14 +128,49 @@ public class SlpProblem {
         }
     }
 
+    /**
+     * Input variables
+     */
     private Variable[][] A;
+
+    /**
+     * Use of input variables
+     */
     private Variable[][] B;
+
+    /**
+     * Use of intermediates
+     */
     private Variable[][] C;
+
+    /**
+     * Mapping from intermediates to results
+     */
     private Variable[][] f;
+
+    /**
+     * Number of lines
+     */
     private int k;
+
+    /**
+     * Number of outputs
+     */
     private int m;
+
+    /**
+     * Number of inputs
+     */
     private int n;
+
+    /**
+     * Store intermediate results for psi
+     */
     private Variable[][] psiResults;
+
+    /**
+     * Our solver instance
+     */
     private ISolver solver;
 
     /**
@@ -107,7 +189,7 @@ public class SlpProblem {
         False falsehood = new False("a");
         for (int i = 0; i < m; i++) {
             for (int j = 0; j < n; j++) {
-                //String name = "a_{" + i + ", " + j + "}";
+                // String name = "a_{" + i + ", " + j + "}";
                 if (A[i][j]) {
                     this.A[i][j] = truth;
                 } else {
@@ -142,6 +224,13 @@ public class SlpProblem {
 
     }
 
+    /**
+     * Implements the beta1 criterium described on page 6
+     *
+     * Always construct an intermediate based on exactly two of b, c
+     *
+     * @return the beta1 for this problem
+     */
     private Variable beta1() {
         Variable[] andn = new Variable[this.k];
         for (int i = 0; i < this.k; i++) {
@@ -154,6 +243,9 @@ public class SlpProblem {
         return new AndN(andn);
     }
 
+    /**
+     * @return the delta of this problem as described on page 7
+     */
     private Variable delta() {
         Variable[] andn = new Variable[this.m];
         for (int l = 0; l < this.m; l++) {
@@ -162,6 +254,12 @@ public class SlpProblem {
         return new And(this.beta1(), new AndN(andn));
     }
 
+    /**
+     * The delta3 as described on page 7
+     *
+     * @param l line for which to give the delta_3
+     * @return the delta3
+     */
     private Variable delta3(int l) {
         Variable[] andimps = new Variable[this.k];
 
@@ -176,6 +274,8 @@ public class SlpProblem {
     }
 
     /**
+     * Try to get the dimacs representation
+     *
      * Doesn't work because of exactly_2
      *
      * @param tunings
@@ -184,7 +284,7 @@ public class SlpProblem {
      */
     public ISolver getDimacsSolver(boolean tunings)
             throws ContradictionException {
-        ISolver solver = SolverFactory.newDimacsOutput();
+        ISolver solver = new DimacsStringSolver();
         GateTranslator translator = new GateTranslator(solver);
         this.getProblem().addToGateTranslator(translator);
         if (tunings) {
@@ -193,14 +293,30 @@ public class SlpProblem {
         return solver;
     }
 
+    /**
+     * @return the logical problem
+     */
     public LogicStatement getProblem() {
         return new LogicStatement(this.delta());
     }
 
+    /**
+     * Finds the solution, with tunings.
+     *
+     * @return the solution or null if none found
+     * @throws
+     */
     public Solution getSolution() throws Exception {
         return this.getSolution(true);
     }
 
+    /**
+     * Try to find the solution
+     *
+     * @param tunings enable tunings
+     * @return the solution or null if none found
+     * @throws Exception
+     */
     public Solution getSolution(boolean tunings) throws Exception {
         IProblem problem = this.getSolvableProblem(tunings);
         System.out.println("Transformed problem");
@@ -235,11 +351,24 @@ public class SlpProblem {
         return solution;
     }
 
-    public ISolver getSolvableProblem() throws ContradictionException {
+    /**
+     * If called before, this will return the previous solver!
+     *
+     * @return the problem with tunings
+     * @throws ContradictionException
+     */
+    public IProblem getSolvableProblem() throws ContradictionException {
         return this.getSolvableProblem(true);
     }
 
-    public ISolver getSolvableProblem(boolean tunings)
+    /**
+     * If already called, will return the previous solver!
+     *
+     * @param tunings enable tunings
+     * @return the problem
+     * @throws ContradictionException
+     */
+    public IProblem getSolvableProblem(boolean tunings)
             throws ContradictionException {
         if (this.solver != null)
             return this.solver;
@@ -307,6 +436,9 @@ public class SlpProblem {
     // return null;
     // }
 
+    /**
+     * @return fourth tuning
+     */
     private Variable getTuning4() {
         Variable[] andn = new Variable[this.k];
         for (int i = 0; i < this.k; i++) {
@@ -319,6 +451,9 @@ public class SlpProblem {
         return new AndN(andn);
     }
 
+    /**
+     * @return fifth tuning
+     */
     private Variable getTuning5() {
         List<Variable> vars = new LinkedList<Variable>();
         for (int i = 0; i < this.m; i++) {
@@ -327,6 +462,9 @@ public class SlpProblem {
         return new AtMostN(this.k, vars.toArray(new Variable[] {}));
     }
 
+    /**
+     * @return sixth tuning
+     */
     private Variable getTuning6() {
         List<Variable> vars = new LinkedList<Variable>();
         for (int i = 0; i < this.m; i++) {
@@ -335,12 +473,24 @@ public class SlpProblem {
         return new AtLeastN(this.m, vars.toArray(new Variable[] {}));
     }
 
+    /**
+     * Get all tunings
+     *
+     * @return all tunings
+     */
     public LogicStatement getTunings() {
         return new LogicStatement(new AndN(new Variable[] { this.getTuning1(),
                 this.getTuning2(), this.getTuning4(), this.getTuning5(),
                 this.getTuning6() }));
     }
 
+    /**
+     * The psi criterium as described on page 7
+     *
+     * @param j column
+     * @param i row
+     * @return the psi criterium
+     */
     private Variable psi(int j, int i) {
         if (this.psiResults[j][i] != null)
             return this.psiResults[j][i];

@@ -9,16 +9,26 @@ import org.sat4j.specs.ContradictionException;
 import org.sat4j.tools.GateTranslator;
 
 /**
+ * Exactly N must be true
+ *
  * @author Thom Wiggers
  *
  */
 public class ExactlyN extends Variable {
 
+    /**
+     * the degree
+     */
     private int n;
+    /**
+     * the vars
+     */
     private Variable[] vars;
 
     /**
-     * @param y
+     * @param y index
+     * @param n the number of cases
+     * @param vars the cases
      */
     public ExactlyN(int y, int n, Variable[] vars) {
         super(y, "exactly" + n);
@@ -27,7 +37,8 @@ public class ExactlyN extends Variable {
     }
 
     /**
-     *
+     * @param n the number of cases
+     * @param vars the cases
      */
     public ExactlyN(int n, Variable[] vars) {
         super("exactly" + n);
@@ -44,16 +55,16 @@ public class ExactlyN extends Variable {
     @Override
     protected void addToGateTranslator(GateTranslator translator)
             throws ContradictionException {
-        if (this.added)
+        if (this.addedToGateTranslator)
             return;
-        this.added = true;
+        this.addedToGateTranslator = true;
 
         VecInt lits = new VecInt();
         for (Variable var : this.vars) {
             var.addToGateTranslator(translator);
             lits.push(var.getIndex());
         }
-        vars = null;
+        this.vars = null;
         translator.addExactly(lits, this.n);
     }
 

@@ -9,6 +9,8 @@ import org.sat4j.specs.ContradictionException;
 import org.sat4j.tools.GateTranslator;
 
 /**
+ * AND all vars
+ *
  * @author Thom Wiggers
  *
  */
@@ -17,7 +19,8 @@ public class AndN extends Variable {
     protected Variable[] variables;
 
     /**
-     * @param y
+     * @param y index
+     * @param vars variables
      */
     public AndN(int y, Variable[] vars) {
         super(y, "andN");
@@ -25,7 +28,7 @@ public class AndN extends Variable {
     }
 
     /**
-     *
+     * @param vars
      */
     public AndN(Variable[] vars) {
         super("andN");
@@ -40,15 +43,15 @@ public class AndN extends Variable {
     @Override
     protected void addToGateTranslator(GateTranslator translator)
             throws ContradictionException {
-        if (this.added)
+        if (this.addedToGateTranslator)
             return;
-        this.added = true;
+        this.addedToGateTranslator = true;
         VecInt literals = new VecInt();
         for (Variable var : this.variables) {
             var.addToGateTranslator(translator);
             literals.push(var.getIndex());
         }
-        variables = null;
+        this.variables = null;
         translator.and(this.getIndex(), literals);
     }
 
