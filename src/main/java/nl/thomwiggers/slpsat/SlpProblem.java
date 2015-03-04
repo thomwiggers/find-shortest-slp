@@ -177,8 +177,6 @@ public class SlpProblem {
      * Initializes the problem
      *
      * @param k the amount of lines expected
-     * @param n the number of input variables
-     * @param m the number of output variables
      * @param A the m×n matrix that represents the program
      */
     public SlpProblem(int k, boolean[][] A) {
@@ -279,7 +277,7 @@ public class SlpProblem {
      * Doesn't work because of exactly_2
      *
      * @param tunings
-     * @return
+     * @return the Dimacs solver
      * @throws ContradictionException
      */
     public ISolver getDimacsSolver(boolean tunings)
@@ -304,7 +302,7 @@ public class SlpProblem {
      * Finds the solution, with tunings.
      *
      * @return the solution or null if none found
-     * @throws
+     * @throws Exception
      */
     public Solution getSolution() throws Exception {
         return this.getSolution(true);
@@ -373,7 +371,7 @@ public class SlpProblem {
         if (this.solver != null)
             return this.solver;
 
-        this.solver = SolverFactory.newMiniSATHeap();
+        this.solver = SolverFactory.newDefault();
         GateTranslator translator = new GateTranslator(this.solver);
         System.out.println("Representing problem in Java");
         LogicStatement problem = this.getProblem();
