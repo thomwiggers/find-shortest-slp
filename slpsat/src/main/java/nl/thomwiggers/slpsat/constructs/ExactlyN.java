@@ -31,7 +31,6 @@ public class ExactlyN extends Variable {
      */
     public ExactlyN(int n, Variable[] vars) {
         super("exactly" + n);
-        assert n == 1;
         this.n = n;
         this.vars = vars;
     }
