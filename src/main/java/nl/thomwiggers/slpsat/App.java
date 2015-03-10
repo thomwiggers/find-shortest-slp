@@ -8,12 +8,15 @@
 
 package nl.thomwiggers.slpsat;
 
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Scanner;
+
+import org.sat4j.specs.ContradictionException;
 
 /**
  * @author Thom Wiggers
@@ -74,10 +77,26 @@ public class App {
 
         System.out.println("Read problem");
 
+        System.out.println("Writing file");
+
+        SlpProblem p = new SlpProblem(k, problem);
+        try {
+		FileWriter fw = new FileWriter("dimacs");
+			fw.write(p.getDimacsSolver(true).toString());
+			fw.close();
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (ContradictionException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+
+
         for (; k >= minK; k--) {
             System.out.println("Solving for K = " + k + " lines…");
 
-            SlpProblem p = new SlpProblem(k, problem);
+            p = new SlpProblem(k, problem);
             SlpProblem.Solution sol = null;
 
             try {
