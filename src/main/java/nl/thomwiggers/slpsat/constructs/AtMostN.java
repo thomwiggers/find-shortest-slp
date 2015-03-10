@@ -4,6 +4,7 @@
  */
 package nl.thomwiggers.slpsat.constructs;
 
+import org.sat4j.core.VecInt;
 import org.sat4j.specs.ContradictionException;
 import org.sat4j.tools.GateTranslator;
 
@@ -60,9 +61,13 @@ public class AtMostN extends Variable {
         if (this.addedToGateTranslator)
             return;
         this.addedToGateTranslator = true;
-        Not op = new Not(new AtLeastN(n+1, vars));
-        op.addToGateTranslator(translator);
-        vars = null;
+        VecInt lits = new VecInt();
+        for (Variable var : this.vars) {
+            var.addToGateTranslator(translator);
+            lits.push(var.getIndex());
+        }
+        this.vars = null;
+        translator.addAtMost(lits, this.n);
     }
 
 }

@@ -58,7 +58,7 @@ public class ExactlyN extends Variable {
             return;
         this.addedToGateTranslator = true;
 
-        And and = new And(new AtLeastN(this.n, vars), new AtMostN(this.n, vars));
+        And and = new And(new AtLeastN(this.n, vars), new Not(new AtLeastN(this.n+1, vars)));
         and.addToGateTranslator(translator);
     }
 
