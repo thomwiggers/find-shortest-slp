@@ -78,7 +78,7 @@ public class App {
 		}
 
 		System.out.println("Read problem");
-
+		/*
 		System.out.println("Writing file");
 
 		SlpProblem p = new SlpProblem(k, problem);
@@ -93,12 +93,12 @@ public class App {
 		} catch (ContradictionException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
-		}
+		}*/
 
 		for (; k >= minK; k--) {
 			System.out.println("Solving for K = " + k + " lines…");
 
-			p = new SlpProblem(k, problem);
+			SlpProblem p = new SlpProblem(k, problem);
 			SlpProblem.Solution sol = null;
 
 			try {
