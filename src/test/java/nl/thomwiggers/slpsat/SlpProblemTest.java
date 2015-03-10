@@ -6,7 +6,6 @@ package nl.thomwiggers.slpsat;
 
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.sat4j.specs.ContradictionException;
 import org.sat4j.specs.TimeoutException;
@@ -117,7 +116,6 @@ public class SlpProblemTest {
      *
      * @throws ContradictionException
      */
-    @Ignore("Doesn't work because of exactn's degree")
     @Test
     public void testToDimacsTuned() throws ContradictionException {
         Assert.assertNotNull(this.problem.getDimacsSolver(true));
@@ -128,7 +126,6 @@ public class SlpProblemTest {
      *
      * @throws ContradictionException
      */
-    @Ignore("Doesn't work because of exactn's degree > 1")
     @Test
     public void testToDimacsUntuned() throws ContradictionException {
         Assert.assertNotNull(this.problem.getDimacsSolver(false));

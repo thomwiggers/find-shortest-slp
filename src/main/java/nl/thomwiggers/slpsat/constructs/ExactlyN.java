@@ -4,7 +4,6 @@
  */
 package nl.thomwiggers.slpsat.constructs;
 
-import org.sat4j.core.VecInt;
 import org.sat4j.specs.ContradictionException;
 import org.sat4j.tools.GateTranslator;
 
@@ -59,13 +58,8 @@ public class ExactlyN extends Variable {
             return;
         this.addedToGateTranslator = true;
 
-        VecInt lits = new VecInt();
-        for (Variable var : this.vars) {
-            var.addToGateTranslator(translator);
-            lits.push(var.getIndex());
-        }
-        this.vars = null;
-        translator.addExactly(lits, this.n);
+        And and = new And(new AtLeastN(this.n, vars), new AtMostN(this.n, vars));
+        and.addToGateTranslator(translator);
     }
 
 }
