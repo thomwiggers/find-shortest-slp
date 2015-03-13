@@ -17,7 +17,7 @@ import org.sat4j.specs.ISolver;
  * @author Thom Wiggers
  *
  */
-@Ignore("Takes at least 32GB RAM")
+//@Ignore("Takes at least 32GB RAM")
 public class AESSolverTestCase {
 
 	/**

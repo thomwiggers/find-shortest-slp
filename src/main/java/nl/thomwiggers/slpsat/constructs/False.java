@@ -38,7 +38,7 @@ public class False extends Variable {
      * .sat4j.tools.GateTranslator)
      */
     @Override
-    protected void addToGateTranslator(GateTranslator translator)
+    public void addToGateTranslator(GateTranslator translator)
             throws ContradictionException {
         if (this.addedToGateTranslator)
             return;

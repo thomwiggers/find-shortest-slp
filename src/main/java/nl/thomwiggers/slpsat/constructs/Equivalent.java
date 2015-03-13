@@ -44,7 +44,7 @@ public class Equivalent extends Variable {
      * addToGateTranslator(org.sat4j.tools.GateTranslator)
      */
     @Override
-    protected void addToGateTranslator(GateTranslator translator)
+    public void addToGateTranslator(GateTranslator translator)
             throws ContradictionException {
         if (this.addedToGateTranslator)
             return;

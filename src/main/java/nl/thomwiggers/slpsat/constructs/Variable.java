@@ -71,7 +71,7 @@ public class Variable {
      * @param translator
      * @throws ContradictionException
      */
-    protected void addToGateTranslator(GateTranslator translator)
+    public void addToGateTranslator(GateTranslator translator)
             throws ContradictionException {
     }
 

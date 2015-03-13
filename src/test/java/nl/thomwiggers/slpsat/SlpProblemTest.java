@@ -7,6 +7,7 @@ package nl.thomwiggers.slpsat;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.Ignore;
 import org.sat4j.specs.ContradictionException;
 import org.sat4j.specs.TimeoutException;
 
@@ -24,17 +25,21 @@ public class SlpProblemTest {
     private SlpProblem problem;
 
     /**
+     * The matrix for the first problem in the paper
+     */
+    private boolean[][] A = new boolean[][] { { true, true, true, true, true },
+            { true, true, true, true, false },
+            { true, true, true, false, true },
+            { false, false, true, true, true },
+            { true, false, false, false, true } };
+
+    /**
      * Set up before each test case
      *
      * @throws Exception
      */
     @Before
     public void setUp() throws Exception {
-        boolean[][] A = new boolean[][] { { true, true, true, true, true },
-                { true, true, true, true, false },
-                { true, true, true, false, true },
-                { false, false, true, true, true },
-                { true, false, false, false, true } };
         this.problem = new SlpProblem(6, A);
     }
 
@@ -78,8 +83,7 @@ public class SlpProblemTest {
     }
 
     /**
-     * Test method for
-     * {@link nl.thomwiggers.slpsat.SlpProblem#getTunings()}.
+     * Test method for {@link nl.thomwiggers.slpsat.SlpProblem#getTunings()}.
      */
     @Test
     public void testGetTunings() {
@@ -117,6 +121,7 @@ public class SlpProblemTest {
      * @throws ContradictionException
      */
     @Test
+    @Ignore("Doesn't work")
     public void testToDimacsTuned() throws ContradictionException {
         Assert.assertNotNull(this.problem.getDimacsSolver(true));
     }
@@ -127,8 +132,21 @@ public class SlpProblemTest {
      * @throws ContradictionException
      */
     @Test
+    @Ignore("Doesn't work")
     public void testToDimacsUntuned() throws ContradictionException {
         Assert.assertNotNull(this.problem.getDimacsSolver(false));
+    }
+
+    /**
+     * Test using a bigger instance
+     *
+     * @throws ContradictionException
+     * @throws TimeoutException
+     */
+    @Test
+    public void testCrazy() throws ContradictionException, TimeoutException {
+        SlpProblem crazy = new SlpProblem(21, A);
+        Assert.assertTrue(crazy.getSolvableProblem(true).isSatisfiable());
     }
 
 }

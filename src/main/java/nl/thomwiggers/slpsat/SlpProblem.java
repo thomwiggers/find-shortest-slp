@@ -31,9 +31,8 @@ import org.sat4j.tools.DimacsStringSolver;
 import org.sat4j.tools.GateTranslator;
 
 /**
- * The SLP problem as described by Fuhs and Schneider-Kamp in
- * "Synthesizing Shortest Linear Straight-Line Programs over GF(2) using
- * SAT".
+ * The SLP problem as described by Fuhs and Schneider-Kamp in "Synthesizing
+ * Shortest Linear Straight-Line Programs over GF(2) using SAT".
  *
  * @author Thom Wiggers
  *
@@ -81,9 +80,12 @@ public class SlpProblem {
         /**
          * Construct a new solution object
          *
-         * @param B the values for B
-         * @param C the values for C
-         * @param f the values for f
+         * @param B
+         *            the values for B
+         * @param C
+         *            the values for C
+         * @param f
+         *            the values for f
          */
         private Solution(boolean[][] B, boolean[][] C, boolean[][] f) {
             this.B = B;
@@ -97,8 +99,10 @@ public class SlpProblem {
         /**
          * Easily print matrices
          *
-         * @param a matrix
-         * @param sb StringBuilder to append to
+         * @param a
+         *            matrix
+         * @param sb
+         *            StringBuilder to append to
          */
         private void appendArrayToStringBuilder(boolean[][] a, StringBuilder sb) {
             sb.append(" = [\n");
@@ -114,6 +118,7 @@ public class SlpProblem {
 
         /*
          * (non-Javadoc)
+         *
          * @see java.lang.Object#toString()
          */
         @Override
@@ -166,20 +171,25 @@ public class SlpProblem {
     /**
      * Store intermediate results for psi
      */
-    private Variable[][] psiResults;
+    private Psi[][] psiResults;
 
     /**
      * Our solver instance
      */
     private ISolver solver;
 
+    private static int number;
+
     /**
      * Initializes the problem
      *
-     * @param k the amount of lines expected
-     * @param A the m×n matrix that represents the program
+     * @param k
+     *            the amount of lines expected
+     * @param A
+     *            the m×n matrix that represents the program
      */
     public SlpProblem(int k, boolean[][] A) {
+        number = 0;
         int m = A.length;
         int n = A[0].length;
         this.A = new Variable[m][n];
@@ -218,7 +228,7 @@ public class SlpProblem {
             }
         }
 
-        this.psiResults = new Variable[k][k];
+        this.psiResults = new Psi[k][k];
 
     }
 
@@ -230,15 +240,7 @@ public class SlpProblem {
      * @return the beta1 for this problem
      */
     private Variable beta1() {
-        Variable[] andn = new Variable[this.k];
-        for (int i = 0; i < this.k; i++) {
-            List<Variable> vars = new LinkedList<Variable>();
-            vars.addAll(Arrays.asList(this.B[i]));
-            vars.addAll(Arrays.asList(this.C[i]));
-            andn[i] = new ExactlyN(2, vars.toArray(new Variable[] {}));
-        }
-
-        return new AndN(andn);
+        return new Beta1();
     }
 
     /**
@@ -255,20 +257,12 @@ public class SlpProblem {
     /**
      * The delta3 as described on page 7
      *
-     * @param l line for which to give the delta_3
+     * @param l
+     *            line for which to give the delta_3
      * @return the delta3
      */
     private Variable delta3(int l) {
-        Variable[] andimps = new Variable[this.k];
-
-        for (int i = 0; i < this.k; i++) {
-            Variable[] andequivs = new Variable[this.n];
-            for (int j = 0; j < this.n; j++) {
-                andequivs[j] = new Equivalent(this.psi(j, i), this.A[l][j]);
-            }
-            andimps[i] = new Implies(this.f[l][i], new AndN(andequivs));
-        }
-        return new And(new AndN(andimps), new ExactlyN(1, this.f[l]));
+        return new Delta3(l);
     }
 
     /**
@@ -311,7 +305,8 @@ public class SlpProblem {
     /**
      * Try to find the solution
      *
-     * @param tunings enable tunings
+     * @param tunings
+     *            enable tunings
      * @return the solution or null if none found
      * @throws Exception
      */
@@ -362,7 +357,8 @@ public class SlpProblem {
     /**
      * If already called, will return the previous solver!
      *
-     * @param tunings enable tunings
+     * @param tunings
+     *            enable tunings
      * @return the problem
      * @throws ContradictionException
      */
@@ -383,14 +379,15 @@ public class SlpProblem {
             this.getTunings().addToGateTranslator(translator);
         }
 
+        // allow to free psis
+        this.psiResults = null;
         return this.solver;
     }
 
     /**
      * The first tuning described in the paper
      *
-     * AND_{0 < i < k} AND_{0 < p < i} OR_{0 < j < n} ( psi(j,i) XOR
-     * psi(j,p) )
+     * AND_{0 < i < k} AND_{0 < p < i} OR_{0 < j < n} ( psi(j,i) XOR psi(j,p) )
      *
      * @return the first tuning
      */
@@ -485,24 +482,133 @@ public class SlpProblem {
     /**
      * The psi criterium as described on page 7
      *
-     * @param j column
-     * @param i row
+     * @param j
+     *            column
+     * @param i
+     *            row
      * @return the psi criterium
      */
-    private Variable psi(int j, int i) {
-        if (this.psiResults[j][i] != null)
-            return this.psiResults[j][i];
-
-        Variable[] xorn = new Variable[i];
-        for (int p = 0; p < i; p++) {
-            Variable psi = this.psiResults[j][p];
-            if (psi == null) {
-                psi = this.psi(j, p);
-            }
-            xorn[p] = new And(this.C[i][p], psi);
+    private Psi psi(int j, int i) {
+        if (psiResults[j][i] == null) {
+            psiResults[j][i] = new Psi(j, i);
         }
-        this.psiResults[j][i] = new Xor(this.B[i][j], new XorN(xorn));
-        return this.psiResults[j][i];
+        return psiResults[j][i];
 
+    }
+
+    private class Beta1 extends Variable {
+
+        /**
+         */
+        public Beta1() {
+            super("beta1");
+        }
+
+        /*
+         * (non-Javadoc)
+         *
+         * @see
+         * nl.thomwiggers.slpsat.constructs.Variable#addToGateTranslator(org
+         * .sat4j.tools.GateTranslator)
+         */
+        @Override
+        public void addToGateTranslator(GateTranslator translator)
+                throws ContradictionException {
+            if (this.addedToGateTranslator)
+                return;
+            addedToGateTranslator = true;
+
+            System.out.println("Translating beta1");
+            Variable[] andn = new Variable[k];
+            for (int i = 0; i < k; i++) {
+                List<Variable> vars = new LinkedList<Variable>();
+                vars.addAll(Arrays.asList(B[i]));
+                vars.addAll(Arrays.asList(C[i]));
+                andn[i] = new ExactlyN(2, vars.toArray(new Variable[] {}));
+            }
+
+            AndN a = new AndN(andn);
+            a.addToGateTranslator(translator);
+        }
+
+    }
+
+    private class Delta3 extends Variable {
+
+        private int l;
+
+        /**
+         * @param l
+         *            linenr
+         */
+        public Delta3(int l) {
+            super("delta3");
+            this.l = l;
+        }
+
+        /*
+         * (non-Javadoc)
+         *
+         * @see
+         * nl.thomwiggers.slpsat.constructs.Variable#addToGateTranslator(org
+         * .sat4j.tools.GateTranslator)
+         */
+        @Override
+        public void addToGateTranslator(GateTranslator translator)
+                throws ContradictionException {
+            if (addedToGateTranslator)
+                return;
+            addedToGateTranslator = true;
+
+            System.out.println("Translating delta3 for " + l);
+            Variable[] andimps = new Variable[k];
+
+            for (int i = 0; i < k; i++) {
+                Variable[] andequivs = new Variable[n];
+                for (int j = 0; j < n; j++) {
+                    andequivs[j] = new Equivalent(psi(j, i), A[l][j]);
+                }
+                andimps[i] = new Implies(f[l][i], new AndN(andequivs));
+            }
+            And a = new And(new AndN(andimps), new ExactlyN(1, f[l]));
+            a.addToGateTranslator(translator);
+        }
+
+    }
+
+    private class Psi extends Variable {
+        private int j, i;
+
+
+
+        public Psi(int j, int i) {
+            super("psi");
+            this.j = j;
+            this.i = i;
+        }
+
+        /*
+         * (non-Javadoc)
+         *
+         * @see
+         * nl.thomwiggers.slpsat.constructs.Variable#addToGateTranslator(org
+         * .sat4j.tools.GateTranslator)
+         */
+        @Override
+        public void addToGateTranslator(GateTranslator translator)
+                throws ContradictionException {
+            if (this.addedToGateTranslator)
+                return;
+            System.out.println("Translating " + ++number + "th of " + k*n + " psi ");
+            addedToGateTranslator = true;
+            Variable[] xorn = new Variable[i];
+            for (int p = 0; p < i; p++) {
+                Psi psi = psi(j, p);
+                xorn[p] = new And(C[i][p], psi);
+            }
+
+            Xor xor = new Xor(B[i][j], new XorN(xorn));
+            xor.addToGateTranslator(translator);
+        }
     }
 }

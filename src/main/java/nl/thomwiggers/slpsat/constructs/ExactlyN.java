@@ -52,13 +52,13 @@ public class ExactlyN extends Variable {
      * (org.sat4j.tools.GateTranslator)
      */
     @Override
-    protected void addToGateTranslator(GateTranslator translator)
+    public void addToGateTranslator(GateTranslator translator)
             throws ContradictionException {
         if (this.addedToGateTranslator)
             return;
         this.addedToGateTranslator = true;
 
-        And and = new And(new AtLeastN(this.n, vars), new Not(new AtLeastN(this.n+1, vars)));
+        And and = new And(new AtLeastN(this.n, vars), new AtMostN(this.n, vars));
         and.addToGateTranslator(translator);
     }
 
