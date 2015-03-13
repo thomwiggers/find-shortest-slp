@@ -115,7 +115,7 @@ public class App {
 				String[] parts = line.split("\\s");
 				LinkedList<Boolean> linelist = new LinkedList<Boolean>();
 				for (String part : parts) {
-					if (part.equals("1") && part.equals("0"))
+					if (!(part.equals("1") || part.equals("0")))
 						throw new IOException("Invalid input format!");
 					linelist.add(part.equals("1"));
 				}

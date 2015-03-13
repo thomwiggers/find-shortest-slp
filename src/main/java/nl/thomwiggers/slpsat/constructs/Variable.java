@@ -34,7 +34,7 @@ public class Variable {
     /**
      * Have we added this variable to the gate translator yet?
      */
-    protected boolean addedToGateTranslator = false;
+    public boolean addedToGateTranslator = false;
 
     /**
      * Variable index in solver
