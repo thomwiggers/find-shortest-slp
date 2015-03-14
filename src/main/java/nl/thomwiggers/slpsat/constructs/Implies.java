@@ -58,11 +58,11 @@ public class Implies extends Variable {
         this.q.addToGateTranslator(translator);
         True z = new True();
         z.addToGateTranslator(translator);
+
         translator.ite(this.getIndex(), this.p.getIndex(), this.q.getIndex(),
                 z.getIndex());
         // Not operation = new Not(new And(this.p, new Not(this.q)));
         // operation.addToGateTranslator(translator);
-        this.p = this.q = null;
 
     }
 

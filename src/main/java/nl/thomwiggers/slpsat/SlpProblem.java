@@ -87,13 +87,13 @@ public class SlpProblem {
          * @param f
          *            the values for f
          */
-        private Solution(boolean[][] B, boolean[][] C, boolean[][] f) {
+        Solution(boolean[][] B, boolean[][] C, boolean[][] f) {
             this.B = B;
             this.C = C;
             this.f = f;
-            this.n = SlpProblem.this.n;
-            this.k = SlpProblem.this.k;
-            this.m = SlpProblem.this.m;
+            this.n = B[0].length;
+            this.k = C.length;
+            this.m = f.length;
         }
 
         /**
@@ -143,9 +143,9 @@ public class SlpProblem {
                 String first = null, second = null;
                 for (int i = 0; i < n; i++) {
                     if (B[l][i]) {
-                        if (first != null) {
+                        if (first == null) {
                             first = "x" + i;
-                        } else if (second != null) {
+                        } else if (second == null) {
                             second = "x" + i;
                         } else {
                             throw new RuntimeException("INVALID SOLUTION WTF?");
@@ -154,7 +154,7 @@ public class SlpProblem {
                 }
                 for (int j = 0; j < l && (first == null || second == null); j++) {
                     if (C[l][j]) {
-                        if (first != null) {
+                        if (first == null) {
                             first = "v" + j;
                         } else {
                             second = "v" + j;
@@ -163,6 +163,9 @@ public class SlpProblem {
                 }
 
                 if (first == null || second == null) {
+                    System.out.println("line: " + l);
+                    System.out.println(Arrays.toString(B[l]) + " "
+                            + Arrays.toString(C[l]));
                     throw new RuntimeException("Invalid solution WTF?");
                 }
 
@@ -170,7 +173,7 @@ public class SlpProblem {
                         .append(" ^ ").append(second);
 
                 for (int i = 0; i < m; i++) {
-                    if (f[i][k]) {
+                    if (f[i][l]) {
                         sb.append("  [y").append(i).append("]");
                         break;
                     }
@@ -537,7 +540,7 @@ public class SlpProblem {
      *            row
      * @return the psi criterium
      */
-    private Psi psi(int j, int i) {
+    private Variable psi(int j, int i) {
         if (psiResults[j][i] == null) {
             psiResults[j][i] = new Psi(j, i);
         }
@@ -570,17 +573,22 @@ public class SlpProblem {
             System.out.println("Translating beta1");
             Variable[] andn = new Variable[k];
             for (int i = 0; i < k; i++) {
-                List<Variable> vars = new LinkedList<Variable>();
-                vars.addAll(Arrays.asList(B[i]));
-                vars.addAll(Arrays.asList(C[i]));
-                andn[i] = new ExactlyN(2, vars.toArray(new Variable[] {}));
+                Variable[] vars = new Variable[n + k];
+                for (int j = 0; j < n; j++) {
+                    vars[j] = B[i][j];
+                }
+                for (int j = 0; j < k; j++) {
+                    vars[n + j] = C[i][j];
+                }
+                andn[i] = new ExactlyN(2, vars);
             }
 
-            AndN a = new AndN(andn);
+            AndN a = new AndN(getIndex(), andn);
             a.addToGateTranslator(translator);
         }
 
     }
+
 
     private class Delta3 extends Variable {
 
@@ -619,7 +627,7 @@ public class SlpProblem {
                 }
                 andimps[i] = new Implies(f[l][i], new AndN(andequivs));
             }
-            And a = new And(new AndN(andimps), new ExactlyN(1, f[l]));
+            And a = new And(getIndex(), new AndN(andimps), new ExactlyN(1, f[l]));
             a.addToGateTranslator(translator);
         }
 
@@ -644,19 +652,21 @@ public class SlpProblem {
         @Override
         public void addToGateTranslator(GateTranslator translator)
                 throws ContradictionException {
-            if (this.addedToGateTranslator)
+            if (addedToGateTranslator) {
                 return;
-            System.out.println("Translating " + ++number + "th of " + k * n
-                    + " psi ");
+            }
             addedToGateTranslator = true;
+
             Variable[] xorn = new Variable[i];
             for (int p = 0; p < i; p++) {
-                Psi psi = psi(j, p);
+                Variable psi = psiResults[j][p];
+                if (psi == null) {
+                    psi = psi(j, p);
+                }
                 xorn[p] = new And(C[i][p], psi);
             }
-
-            Xor xor = new Xor(B[i][j], new XorN(xorn));
-            xor.addToGateTranslator(translator);
+            Xor result = new Xor(this.getIndex(), B[i][j], new XorN(xorn));
+            result.addToGateTranslator(translator);
         }
     }
 }

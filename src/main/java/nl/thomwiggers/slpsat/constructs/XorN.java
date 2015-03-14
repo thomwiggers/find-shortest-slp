@@ -58,8 +58,10 @@ public class XorN extends Variable {
             var.addToGateTranslator(translator);
             literals.push(var.getIndex());
         }
-        translator.xor(this.getIndex(), literals);
+
         this.vars = null;
+        translator.xor(this.getIndex(), literals);
+
     }
 
 }

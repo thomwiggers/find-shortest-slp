@@ -56,8 +56,8 @@ public class OrN extends Variable {
             var.addToGateTranslator(translator);
             lits.push(var.getIndex());
         }
-        translator.or(this.getIndex(), lits);
         this.vars = null;
+        translator.or(this.getIndex(), lits);
 
     }
 

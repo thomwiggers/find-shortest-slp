@@ -157,7 +157,7 @@ public class SlpProblemTest {
      */
     @Test
     public void testToProgramTuned() throws Exception {
-        Assert.assertNotNull(problem.getSolution(true).stringAsProgram());
+        System.out.println(problem.getSolution(true).stringAsProgram());
     }
 
     /**
@@ -167,7 +167,40 @@ public class SlpProblemTest {
      */
     @Test
     public void testToProgramNotTuned() throws Exception {
-        Assert.assertNotNull(problem.getSolution(false).stringAsProgram());
+        System.out.println(problem.getSolution(false).stringAsProgram());
+    }
+
+    /**
+     * Test toProgram
+     *
+     * @throws Exception
+     */
+    @Test
+    public void testToProgramWorks() throws Exception {
+        boolean[][] B = new boolean[][] {
+                {true, false, false, false, true},
+                {false, true, false, false, false},
+                {false, false, true, false, false},
+                {false, false, false, true, false},
+                {false, false, false, false, true},
+                {false, false, false, false, false}};
+        boolean[][] C = new boolean[][] {
+                {false, false, false, false, false, false},
+                {true,  false, false, false, false, false},
+                {false, true,  false, false, false, false},
+                {false, false, true,  false, false, false},
+                {false, false, false, true, false, false},
+                {false, true, false, false, true, false}};
+
+        boolean[][] f = new boolean[][] {
+                {false, false, false, true, false, false},
+                {false, false, false, false, true, false},
+                {false, false, true, false, false, false},
+                {false, false, false, false, false, true},
+                {true, false, false, false, false, false}};
+
+        SlpProblem.Solution sol = problem.new Solution(B, C, f);
+        System.out.println(sol.stringAsProgram());
     }
 
 }
