@@ -656,6 +656,7 @@ public class SlpProblem {
                 return;
             }
             addedToGateTranslator = true;
+            System.out.println("Transforming " + ++number+"th Psi of " + n*k + " Psis");
 
             Variable[] xorn = new Variable[i];
             for (int p = 0; p < i; p++) {
