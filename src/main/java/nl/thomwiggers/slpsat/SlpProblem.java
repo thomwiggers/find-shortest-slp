@@ -303,7 +303,7 @@ public class SlpProblem {
         for (int l = 0; l < this.m; l++) {
             andn[l] = this.delta3(l);
         }
-        return new And(this.beta1(), new AndN(andn));
+        return new And(new AndN(andn), this.beta1());
     }
 
     /**
