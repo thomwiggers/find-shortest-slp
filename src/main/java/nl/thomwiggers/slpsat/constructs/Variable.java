@@ -25,7 +25,7 @@ public class Variable {
      */
     static int getNextFreeIndex() {
         if ((Variable.nextFreeIndex - 10) % 1000 == 0) {
-            System.out.println("I've now seen " + Variable.nextFreeIndex
+            System.out.println("I've now seen " + (Variable.nextFreeIndex-10)
                     + " elements");
         }
         return Variable.nextFreeIndex++;

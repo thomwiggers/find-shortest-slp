@@ -144,10 +144,34 @@ public class SlpProblemTest {
      * @throws TimeoutException
      */
     @Test
-    @Ignore("ignore until testToProgram Fixed")
     public void testCrazy() throws ContradictionException, TimeoutException {
         SlpProblem crazy = new SlpProblem(21, A);
         Assert.assertTrue(crazy.getSolvableProblem(true).isSatisfiable());
+    }
+
+    /**
+     * test if the 5 case is not satisfiable
+     *
+     * @throws ContradictionException
+     * @throws TimeoutException
+     */
+    @Test
+    public void testUnsat() throws ContradictionException, TimeoutException {
+        SlpProblem unsat = new SlpProblem(5, A);
+        Assert.assertFalse(unsat.getSolvableProblem(true).isSatisfiable());
+        Assert.assertFalse(unsat.getSolvableProblem(false).isSatisfiable());
+    }
+
+    /**
+     * test if the 5 case is not satisfiable without tunings
+     *
+     * @throws ContradictionException
+     * @throws TimeoutException
+     */
+    @Test
+    public void testUnsatUntuned() throws ContradictionException, TimeoutException {
+        SlpProblem unsat = new SlpProblem(5, A);
+        Assert.assertFalse(unsat.getSolvableProblem(false).isSatisfiable());
     }
 
     /**

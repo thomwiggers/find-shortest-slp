@@ -420,6 +420,8 @@ public class SlpProblem {
             return this.solver;
 
         this.solver = SolverFactory.newDefault();
+        this.solver.setVerbose(true);
+
         GateTranslator translator = new GateTranslator(this.solver);
         System.out.println("Representing problem in Java");
         LogicStatement problem = this.getProblem();
@@ -660,11 +662,7 @@ public class SlpProblem {
 
             Variable[] xorn = new Variable[i];
             for (int p = 0; p < i; p++) {
-                Variable psi = psiResults[j][p];
-                if (psi == null) {
-                    psi = psi(j, p);
-                }
-                xorn[p] = new And(C[i][p], psi);
+                xorn[p] = new And(psi(j, p), C[i][p]);
             }
             Xor result = new Xor(this.getIndex(), B[i][j], new XorN(xorn));
             result.addToGateTranslator(translator);
