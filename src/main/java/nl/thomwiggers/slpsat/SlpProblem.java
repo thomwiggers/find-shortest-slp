@@ -131,6 +131,55 @@ public class SlpProblem {
             this.appendArrayToStringBuilder(this.f, sb);
             return sb.toString();
         }
+
+        /**
+         * Print the solution as a program.
+         *
+         * @return The program
+         */
+        public String stringAsProgram() {
+            StringBuilder sb = new StringBuilder();
+            for (int l = 0; l < k; l++) {
+                String first = null, second = null;
+                for (int i = 0; i < n; i++) {
+                    if (B[l][i]) {
+                        if (first != null) {
+                            first = "x" + i;
+                        } else if (second != null) {
+                            second = "x" + i;
+                        } else {
+                            throw new RuntimeException("INVALID SOLUTION WTF?");
+                        }
+                    }
+                }
+                for (int j = 0; j < l && (first == null || second == null); j++) {
+                    if (C[l][j]) {
+                        if (first != null) {
+                            first = "v" + j;
+                        } else {
+                            second = "v" + j;
+                        }
+                    }
+                }
+
+                if (first == null || second == null) {
+                    throw new RuntimeException("Invalid solution WTF?");
+                }
+
+                sb.append("v").append(l).append(" = ").append(first)
+                        .append(" ^ ").append(second);
+
+                for (int i = 0; i < m; i++) {
+                    if (f[i][k]) {
+                        sb.append("  [y").append(i).append("]");
+                        break;
+                    }
+                }
+                sb.append("\n");
+            }
+
+            return sb.toString();
+        }
     }
 
     /**
@@ -561,8 +610,8 @@ public class SlpProblem {
             addedToGateTranslator = true;
 
             System.out.println("Translating delta3 for " + l);
-            Variable[] andimps = new Variable[k];
 
+            Variable[] andimps = new Variable[k];
             for (int i = 0; i < k; i++) {
                 Variable[] andequivs = new Variable[n];
                 for (int j = 0; j < n; j++) {
@@ -578,8 +627,6 @@ public class SlpProblem {
 
     private class Psi extends Variable {
         private int j, i;
-
-
 
         public Psi(int j, int i) {
             super("psi");
@@ -599,7 +646,8 @@ public class SlpProblem {
                 throws ContradictionException {
             if (this.addedToGateTranslator)
                 return;
-            System.out.println("Translating " + ++number + "th of " + k*n + " psi ");
+            System.out.println("Translating " + ++number + "th of " + k * n
+                    + " psi ");
             addedToGateTranslator = true;
             Variable[] xorn = new Variable[i];
             for (int p = 0; p < i; p++) {

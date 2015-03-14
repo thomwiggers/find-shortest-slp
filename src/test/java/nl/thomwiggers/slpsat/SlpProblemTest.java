@@ -144,9 +144,30 @@ public class SlpProblemTest {
      * @throws TimeoutException
      */
     @Test
+    @Ignore("ignore until testToProgram Fixed")
     public void testCrazy() throws ContradictionException, TimeoutException {
         SlpProblem crazy = new SlpProblem(21, A);
         Assert.assertTrue(crazy.getSolvableProblem(true).isSatisfiable());
+    }
+
+    /**
+     * Test if we can display the matrices as a program.
+     *
+     * @throws Exception
+     */
+    @Test
+    public void testToProgramTuned() throws Exception {
+        Assert.assertNotNull(problem.getSolution(true).stringAsProgram());
+    }
+
+    /**
+     * Test if we can display the matrices as a program
+     *
+     * @throws Exception
+     */
+    @Test
+    public void testToProgramNotTuned() throws Exception {
+        Assert.assertNotNull(problem.getSolution(false).stringAsProgram());
     }
 
 }

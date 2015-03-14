@@ -74,6 +74,18 @@ public class App {
 		}
 
 		System.out.println("Read problem");
+		StringBuilder sb = new StringBuilder("A");
+        sb.append(" = [\n");
+        for (boolean[] row : problem) {
+            sb.append("\t[");
+            for (boolean var : row) {
+                sb.append(var ? 1 : 0).append(", ");
+            }
+            sb.delete(sb.lastIndexOf(","), sb.length()).append("],\n");
+        }
+        sb.append("]\n");
+        System.out.println(sb.toString());
+
 
 		for (; k >= minK; k--) {
 			System.out.println("Solving for K = " + k + " lines…");
@@ -91,6 +103,8 @@ public class App {
 						+ "solution for your problem at k = " + k);
 			} else {
 				System.out.println(sol.toString());
+				System.out.println("Program:");
+				System.out.println(sol.stringAsProgram());
 			}
 		}
 	}
