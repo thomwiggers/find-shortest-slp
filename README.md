@@ -4,7 +4,25 @@ Find the shortest SLP by transforming it to SAT
 Implements Fuhs and Schneider-Kamp's paper "Synthesizing Shortest Linear
 Straight-Line Programs over GF(2) using SAT". 
 
-Part of my Bachelor Thesis project. See https://thomwiggers.nl/proest/
+Part of my Bachelor Thesis project. See https://thomwiggers.nl/project/bachelors-thesis/.
+
+Referencing
+-----------
+
+```
+Thom Wiggers. Implementing CAESAR candidate Prøst on ARM11. Student Undergraduate Research E-Journal!, Volume 1, 2015.
+
+@inproceedings{Wiggers2015PoestOnARM,
+  title = "Implementing CAESAR candidate Prøst on ARM11",
+  author = "Thom Wiggers",
+  date = "2015-11-20",
+  journal = "Student Undergraduate Research E-Journal!",
+  volume = 1,
+  issn = "2468-0443",
+  url = "https://thomwiggers.nl/project/bachelors-thesis/",
+}
+```
+
 
 Usage
 -----
